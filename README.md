@@ -51,6 +51,8 @@ for a list of commnads type 'help' in the listener console when connected to the
 
 
 # PoC  
+:heavy_exclamation_mark: DO NOT upload this on VirusTotal or anywhere else, I DID IT FOR YOU :heavy_exclamation_mark:  
+  
   using pure python code:  
    
 ![Image description](https://github.com/7h3w4lk3r/pyback/blob/master/poc.png)  
