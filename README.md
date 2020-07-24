@@ -48,7 +48,7 @@ for a list of commnads type 'help' in the listener console when connected to the
 . to use upload functionality you should put the target file in the same directory as the listener.py file.   
 . backdoor doesnt auto-activate the persistence module for better evation chance, if you want to change that simply uncomment the self.persistance() line in backdoor file.  
 . the `enum` command may take a few minutes and results will be saved in the listener directory. to see colored output use `cat enum*.txt`  
-. spawn function will run an FUD reverse powershell payload on victim machine, you can catch it with `rlwrap nc -nvlp [port]`  
+. spawn function will run an FUD reverse powershell payload on victim machine, you can catch it with `nc -nvlp [port]`  
 
 
 # PoC  
