@@ -21,7 +21,7 @@ FUD cross-platform python2 backdoor
 `pip install -r requirments.txt`  
 
 . for windows targets:   
-[!] WARNING: DO NOT USE WINE FOR WINDOWS TARGET COMPILATION [!]  
+:warning: WARNING: DO NOT USE WINE FOR WINDOWS TARGET COMPILATION :warning:  
 
 `pip install -r requirments.txt`  
 `pip install wmi`  
