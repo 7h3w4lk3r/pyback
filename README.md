@@ -16,8 +16,9 @@ FUD cross-platform python2 backdoor
 .  Dump hashes with ntds and reg save methods ( files should be downloaded manually ) 
 
 # To Do  
+. port scanner  
+. dump browser passwords  
 . shell code execution  
-. RSA or Hybrid encrypted communication  
 
 # Usage  
 . for linux targets:  
