@@ -23,13 +23,11 @@ FUD cross-platform python2 backdoor
 . for windows targets:   
 :warning: WARNING: DO NOT USE WINE FOR WINDOWS TARGET COMPILATION :warning:  
 
+install VCforPython from <a href="https://www.microsoft.com/en-us/download/details.aspx?id=44266"> here </a>.  
+
 `pip install -r requirments.txt`  
 `pip install wmi`  
-
-install VCforPython from <a href="https://www.microsoft.com/en-us/download/details.aspx?id=44266"> here </a>.  
  
- 
-
 pyinstaller will encrease the detection rate. use this version only:   
 `pip install pyinstaller==3.1.1`  
 
