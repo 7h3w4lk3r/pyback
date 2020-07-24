@@ -15,6 +15,9 @@ FUD cross-platform python2 backdoor
 .  Client or server connection wait   
 .  Dump hashes with ntds and reg save methods ( files should be downloaded manually ) 
 
+# To Do  
+. shell code execution  
+. RSA or Hybrid encrypted communication  
 
 # Usage  
 . for linux targets:  
