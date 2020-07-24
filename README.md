@@ -18,7 +18,7 @@ FUD cross-platform python2 backdoor
 # To Do  
 . port scanner  
 . dump browser passwords  
-. shell code execution  
+. shellcode execution  
 
 # Usage  
 . for linux targets:  
