@@ -13,7 +13,7 @@ FUD cross-platform python2 backdoor
 .  Run a fork bomb on victim machine, just for fun :)  
 .  Persistance using REGKEY (windows only)  
 .  Client or server connection wait   
-.  Dump hashes with ntds and reg save methods ( files should be manually downloaded ) 
+.  Dump hashes with ntds and reg save methods ( files should be downloaded manually ) 
 
 
 # Usage  
