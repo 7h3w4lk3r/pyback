@@ -30,8 +30,7 @@ install VCforPython from <a href="https://www.microsoft.com/en-us/download/detai
 
 `pip install -r windows_requirments.txt`  
  
-pyinstaller will encrease the detection rate. use this version only:   
-`pip install pyinstaller==3.1.1`  
+pyinstaller will encrease the detection rate. use version 3.1.1 only.   
 
 change the port and ip or DNS in both listener.py and backdoor.py files.  
 
