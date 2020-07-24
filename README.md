@@ -10,7 +10,7 @@ FUD cross-platform python2 backdoor
 .  Check sandbox and VM (VM check only for windows, using wmi module)  
 .  Download/upload files  
 .  Dump clipboard  
-.  Run a fork bomb on victim machine, just for fun :)  
+.  Run a fork bomb on victim machine, just for fun :relaxed:  
 .  Persistance using REGKEY (windows only)  
 .  Client or server connection wait   
 .  Dump hashes with ntds and reg save methods ( files should be downloaded manually ) 
