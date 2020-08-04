@@ -31,7 +31,6 @@ banner = green + """
 Created by: 7h3w4lk3r
 
 Email: bl4ckr4z3r@gmail.com
-Telegram ID: @w4lk3r1998
 """ + r
 
 
