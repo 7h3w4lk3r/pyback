@@ -65,5 +65,5 @@ for a list of commnads type 'help' in the listener console when connected to the
   
 # Contact  
 Email: bl4ckr4z3r@gmail.com  
-Telegram ID: @w4lk3r1998
+
 
