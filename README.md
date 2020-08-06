@@ -35,12 +35,6 @@ pyinstaller will encrease the detection rate. use version 3.1.1 only.
 
 change the port and ip or DNS in both listener.py and backdoor.py files.  
 
-attacker side:  
-`./listener.py`  
-
-victim side:  
-`./backdoor.py`  
-
 for a list of commnads type 'help' in the listener console when connected to the backdoor.   
 
 
