@@ -2,7 +2,7 @@
 FUD cross-platform python2 backdoor  
 
 # Features    
-.  AES encrypted channel (enhanced)
+.  AES encrypted channel (enhanced)  
 .  Linux and windows post-exploitation enumeration  
 .  Run powershell commands and scripts  
 .  Spawn an independent powershell session to a remote machine (catch with netcat)  
