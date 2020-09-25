@@ -32,7 +32,6 @@ port = 6969
 
 
 
-
 # detect OS type for future use........................
 if "Linux" in platform.uname():
     os_type = "linux"
