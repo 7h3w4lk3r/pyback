@@ -24,7 +24,7 @@ FUD cross-platform python2 backdoor
 
 ## for windows targets:   
 :warning: WARNING: DO NOT USE WINE FOR WINDOWS TARGET COMPILATION :warning:  
-:warning: use python 2.7.15 32bit version only :warning: 
+:warning: use python 2.7.15 32bit version only :warning:   
 install VCforPython from <a href="https://www.microsoft.com/en-us/download/details.aspx?id=44266"> here </a>.  
 `pip install -r windows_requirments.txt`  
 `pyinstaller -onefile -noconsole backdoor.py`   
