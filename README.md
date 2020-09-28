@@ -18,24 +18,26 @@ FUD cross-platform python2 backdoor
 
 
 # Usage  
-. for linux targets:  
+### . remember to change 
+## for linux targets:  
 `pip install -r linux_requirments.txt`  
 
-. for windows targets:   
+## for windows targets:   
 :warning: WARNING: DO NOT USE WINE FOR WINDOWS TARGET COMPILATION :warning:  
+:warning: use python 2.7.15 32bit version only :warning: 
 install VCforPython from <a href="https://www.microsoft.com/en-us/download/details.aspx?id=44266"> here </a>.  
 `pip install -r windows_requirments.txt`  
+`pyinstaller -onefile -noconsole backdoor.py`   
  
-pyinstaller will encrease the detection rate. use version 3.1.1 only.   
-
-change the port and ip or DNS in both listener.py and backdoor.py files.  
+ 
+pyinstaller will encrease the detection rate. use version 3.1.1 only.if you have any other versions installed its highly recommended to replace it for better evasion chance.   
 
 for a list of commnads type 'help' in the listener console when connected to the backdoor.   
 
 
 # Tips  
 . to use upload functionality you should put the target file in the same directory as the listener.py file.   
-. backdoor doesnt auto-activate the persistence module for better evation chance, if you want to change that simply uncomment the self.persistance() line in backdoor file.  
+. backdoor doesnt auto-activate the persistence module for better evasion chance, if you want to change that simply uncomment the self.persistance() line in backdoor file.  
 . the `enum` command may take a few minutes and results will be saved in the listener directory. to see colored output use `cat enum*.txt`  
 . spawn function will run an FUD reverse powershell payload on victim machine, you can catch it with `nc -nvlp [port]`  
 
