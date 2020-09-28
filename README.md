@@ -18,7 +18,7 @@ FUD cross-platform python2 backdoor
 
 
 # Usage  
-### . remember to change 
+### . remember to change ip and port in both files.(no-ip dns is available)   
 ## for linux targets:  
 `pip install -r linux_requirments.txt`  
 
