@@ -2,23 +2,35 @@
 FUD cross-platform python2 backdoor  
 
 # Features    
-.  AES encrypted channel (enhanced)  
-.  Linux and windows post-exploitation enumeration  
+.  Direct shell access  
+.  AES encrypted channel   
+.  Add/remove firewall rules  
+.  Backdoor access protection with password  
 .  Run powershell commands and scripts  
-.  Spawn an independent powershell session to a remote machine (catch with netcat)  
+.  Spawn an independent powershell session to a remote machine    
 .  Screenshot  
-.  Check sandbox and VM (VM check only for windows, using wmi module)  
+.  Check for sandbox and VM   
 .  Download/upload files  
 .  Dump clipboard  
-.  Run a fork bomb on victim machine, just for fun :relaxed:  
-.  Persistance using REGKEY (windows only)  
-.  Client or server connection wait   
+.  Persistance using REGKEY  
+.  Client or server connection wait  
 .  Dump hashes with ntds and reg save methods ( files should be downloaded manually ) 
 
+# Change Log  
+. Removed the enum functions and refactored code  
+. Backdoor login protection added  
 
+# Usage Tips  
+. DO NOT use single or double quotes in file name or directory path for any target, for example:  
+to change the directory to `\'test file'`, type in `cd test file` NOT `cd 'test file'`  
+. All commands NOT LISTED in help will be executed as target system shell commands.  
+. To use upload functionality you should put the target file in the same directory as the listener.py file.   
+. Spawn function will run an FUD reverse powershell payload on victim machine, you can catch it with `nc -nvlp [port]`  
 
 # Usage  
-### . remember to change ip and port in both files.(no-ip dns is available)   
+### . remember to change ip and port in both files.(no-ip dns is available)
+### . change the backdoor access password in the backdoor.py file  
+
 ## for linux targets:  
 `pip install -r linux_requirments.txt`  
 
@@ -29,18 +41,14 @@ install VCforPython from <a href="https://www.microsoft.com/en-us/download/detai
 `pip install -r windows_requirments.txt`  
 `pyinstaller -onefile -noconsole backdoor.py`   
  
- 
-pyinstaller will encrease the detection rate. use version 3.1.1 only.if you have any other versions installed its highly recommended to replace it for better evasion chance.   
+### pyinstaller will encrease the detection rate.   
 
-for a list of commnads type 'help' in the listener console when connected to the backdoor.   
+### for a list of commnads type 'help' in the listener console when connected to the backdoor.   
 
-
-# Tips  
-. to use upload functionality you should put the target file in the same directory as the listener.py file.   
-. backdoor doesnt auto-activate the persistence module for better evasion chance, if you want to change that simply uncomment the self.persistance() line in backdoor file.  
-. the `enum` command may take a few minutes and results will be saved in the listener directory. to see colored output use `cat enum*.txt`  
-. spawn function will run an FUD reverse powershell payload on victim machine, you can catch it with `nc -nvlp [port]`  
-
+# To Do  
+. Add a low-level port scanner  
+. Add more credential dumping and persistence methods  
+. Add obfuscation methods  
 
 # PoC  
 :heavy_exclamation_mark: DO NOT upload this on VirusTotal or anywhere else, I DID IT FOR YOU :heavy_exclamation_mark:  
