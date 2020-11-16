@@ -1,5 +1,5 @@
 # PYBACK  
-FUD cross-platform python2 backdoor  
+another FUD (if you keep it that way) cross-platform python backdoor. im working on it as a hobby and would like to have some feedback and suggestions.  
 
 # Features    
 .  Direct shell access  
