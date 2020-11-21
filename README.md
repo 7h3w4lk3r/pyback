@@ -54,7 +54,7 @@
 .  you tell me...  
 
 # POC  
-### we all know that no tool like this is not going to stay as FUD as it is, specially when it gets more attention (hopefully). so do me (and yourself) a favor and make it stay under the radar a little bit longer.  
+### we all know that no tool like this will stay as FUD as it is, specially when it gets more attention (hopefully). so do me (and yourself) a favor and make it stay under the radar a little bit longer.  
 :heavy_exclamation_mark: DO NOT upload this on VirusTotal or anywhere else, I DID IT FOR YOU :heavy_exclamation_mark:  
 
 ### using pyinstaller version 3.1.1:  
