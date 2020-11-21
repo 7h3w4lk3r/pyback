@@ -1,10 +1,10 @@
 # PYBACK  
-#### Another FUD (if you keep it that way) cross-platform backdoor and CNC writen in python 2.  
+#### Another FUD (if you keep it that way) cross-platform backdoor and CNC written in python 2.  
 #### i tried to make the code as clean as possible for future development and as i dont consider myself a developer i would be happy to have some feedback and suggestions on this project.  
 
 # Top Features  
 .  Cross-platform modules (of course)  
-.  Direct shell access ( no need to type extra garbage ) 
+.  Direct shell access ( no need to type extra garbage )  
 .  AES encrypted communication  
 .  Command and Control center  
 .  Can execute commands on all sessions at the same time (happy SKs?)  
@@ -20,9 +20,9 @@
 .  and there will be more :)  
 
 # Installation  
-### :warning: Note: the backdoor should be compiled in a system with OS and architecture same as the target :warning:  
+### :warning: the backdoor should be compiled in a system with OS and architecture same as the target :warning:  
 
-#### requirements:  
+### requirements:  
 #### python 2 version 2.7.15 or later  
 #### VCforPython for windows targets, download from  <a href="https://www.microsoft.com/en-us/download/details.aspx?id=44266"> here </a>  
 #### to install pyback simply run the setup.py  
@@ -54,7 +54,7 @@
 .  you tell me...  
 
 # POC  
-### we all know this tool is not going to stay as FUD as it is, specially when it gets more attention (hopefully). so do me (and yourself) a favor and make it stay under the radar a little longer.  
+### we all know that no tool like this is not going to stay as FUD as it is, specially when it gets more attention (hopefully). so do me (and yourself) a favor and make it stay under the radar a little bit longer.  
 :heavy_exclamation_mark: DO NOT upload this on VirusTotal or anywhere else, I DID IT FOR YOU :heavy_exclamation_mark:  
 
 ### using pyinstaller version 3.1.1:  
