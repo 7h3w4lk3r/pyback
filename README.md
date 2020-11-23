@@ -12,7 +12,7 @@
 .  Check for virtual machine and sandbox  
 .  Take screenshots  
 .  Dump clipboard  
-.  Keylogger
+.  Keylogger  
 .  Spawn a separate powershell session  
 .  Enable/disable RDP  
 .  Enable/disable UAC  
