@@ -120,6 +120,6 @@ password = """+"'"+password+"'"+"""
     f = open(setting_path,"w")
     f.write(setting)
     f.close()
-    print yellow,"\n\n[*] setting file created [*]\n\n"
+    print yellow,"\n\n[*] setting file created [*]\n now send the backdoor, run cnc.py and wait for connections...\n happy hacking:)"
 
 generator()
