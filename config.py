@@ -65,7 +65,7 @@ def generator():
         print "AES encryption password : ", password
         print r
         vrfy = raw_input("\n[*] is everything correct ? (Y/n): ")
-        if vrfy == "y" or vrfy == "":
+        if vrfy == "y" or vrfy == "Y" or vrfy == "":
             break
         elif vrfy == "n":
             generator()

@@ -36,7 +36,7 @@ else:
     TMP = "/tmp"
 
 # connection/access settings ##############
-dns = '192.168.56.1'
+dns = '0.0.0.0'
 port = 6000
 ip = socket.gethostbyname(dns)
 # AES channel password ##############
