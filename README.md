@@ -54,7 +54,7 @@
 .  you tell me...  
 
 # Changelog  
-#### see changelogs for different versions [here] (https://github.com/7h3w4lk3r/pyback/blob/master/CHANGELOGS.md)    
+#### see changelogs for different versions [here](https://github.com/7h3w4lk3r/pyback/blob/master/CHANGELOGS.md)    
 
 
 # POC  
