@@ -53,7 +53,7 @@ class listener:
  --     --------------------    ---------------
 """
                 for ip in self.ips:
-                    print " ", "".join(str(count)) + "\t" + str(ip[0]) + ":" + str(ip[1]) + "\t", self.connection_time[count]
+                    print " ", "".join(str(count)) + "\t" + str(ip[0]) + ":" + str(ip[1]) + "\t\t", self.connection_time[count]
                     count += 1
                 print "\n\n"
                 print green, "Connected sessions: ",self.clients,"\n", r
