@@ -31,3 +31,5 @@ All notable changes to this project will be documented in this file.
 - enable/disable UAC  
 - turn on/off display  
 
+### Removed  
+- backdoor password protection removed to prevent interfering with `cast` commands  
