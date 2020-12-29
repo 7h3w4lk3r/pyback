@@ -40,3 +40,15 @@ def sysinfo():
                 "\n   Time{8:23}: {7}\n"
     ).format(platform.platform(),arch,user,str(is_admin),ip,platform.node(),date,time," ")
     return stinfo
+
+
+
+
+
+
+
+
+
+
+
+

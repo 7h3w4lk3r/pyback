@@ -362,6 +362,7 @@ System and Shell
  command                description
  -------                -----------
  sysinfo                 print system and OS information
+ getenv                  print system environment variables with value
  checkvm                 check if the system is a sandbox or VM
  uac on/off              disable/enable UAC
 

