@@ -17,7 +17,7 @@
 .  Enable/disable RDP  
 .  Enable/disable UAC  
 .  Easy session interaction and handling  
-.  and there will be more :)  
+
 
 # Installation  
 ### :warning: the backdoor should be compiled in a system with OS and architecture same as the target :warning:  
@@ -49,9 +49,10 @@
 .  ANY COMMAND not included in the help banners will be executed as system shell commands so be carefull with that.  
 
 # To Do  
+.  Migrate to python3 (pain in the ass)  
 .  Add more post-exploitation modules  
 .  Add a low-level port scanner  
-.  you tell me...  
+
 
 # Changelog  
 #### see changelogs for different versions [here](https://github.com/7h3w4lk3r/pyback/blob/master/CHANGELOGS.md)    
