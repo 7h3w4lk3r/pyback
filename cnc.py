@@ -90,11 +90,12 @@ class listener:
                         while i < number_of_targets:
                             target_address = self.ips[i]
                             target_number = self.targets[i]
-                            print self.targets[i]
-                            print "\033[1;32;32m \n[+]\x1b[0m response from: ",str(target_address[0]),":",str(target_address[1]),"\033[1;32;32m [+]\x1b[0m"
+                            target_session = self.session_id[i]
+
+                            print "\033[1;32;32m \n[+]\x1b[0m Response from session ",target_session ," ,",str(target_address[0]),":",str(target_address[1]),"\033[1;32;32m [+]\x1b[0m"
                             print  green,"=============================================================================",r
                             self.json_send(command[1:],target_number)
-                            print self.receive(target_number)
+                            print self.receive(target_number) + "\n\n"
                             i += 1
                     except Exception,e:
                         print e
