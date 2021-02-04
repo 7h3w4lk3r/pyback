@@ -1,15 +1,15 @@
 # PYBACK 2.0  
-#### Another FUD (if you keep it that way) cross-platform backdoor and CNC written in python 2.  
-#### i tried to make the code as clean as possible for future development and as i dont consider myself a developer i would be happy to have some feedback and suggestions on this project.  
+#### FUD (if you keep it that way) cross-platform backdoor and CNC written in python 2 with post exploitation modules and encrypted communication.  
+
 
 # Top Features  
 .  Cross-platform modules (of course)  
 .  Direct shell access ( no need to type extra garbage )  
 .  AES encrypted communication  
 .  Command and Control center  
-.  Can execute commands on all sessions at the same time (happy SKs?)  
+.  Can execute commands on all sessions at the same time ( AKA Botnet )  
 .  Download/upload files  
-.  Check for virtual machine and sandbox  
+.  Detect virtual machine and sandbox  
 .  Take screenshots  
 .  Dump clipboard  
 .  Keylogger  
@@ -17,28 +17,27 @@
 .  Enable/disable RDP  
 .  Enable/disable UAC  
 .  Easy session interaction and handling  
+.  Windows persistence using registry entries ( more methods will be added )  
 
 
 # Installation  
-### :warning: the backdoor should be compiled in a system with OS and architecture same as the target :warning:  
+#### Note: the backdoor should be compiled in a system with the same OS and architecture as the target. DO NOT use wine for windows binary compilation, it wont work.  
 
 ### requirements:  
-#### python 2 version 2.7.15 or later  
+#### python 2 ,version 2.7.15 or later  
 #### VCforPython for windows targets, download from  <a href="https://www.microsoft.com/en-us/download/details.aspx?id=44266"> here </a>  
-#### to install pyback simply run the setup.py  
-#### pyback will detect your OS type and install the packages accordingly.  
-`python setup.py`  
+#### to install pyback simply run the setup.py   
+`./setup.py`  
 
 # Usage  
-#### after running the setup script, you can either change the configurations manually in lib/setting.py or you can have the config.py script to do it for you.  
-`python config.py`  
+#### run the config.py script or edit the lib/setting.py manually.  
+`./config.py`  
 
-#### this script will take 3 parameters: ip/dns, port and password for AES encryption.  
-#### after running the config script you can compile the backdoor however you want. i use pyinstaller.  
+#### compile the backdoor however you want. i use pyinstaller.  
 ` pyinstaller --onefile --noconsole backdoor.py`  
 
 #### send the backdoor, start the c2 and wait for connections.  
-` python cnc.py`  
+`./cnc.py`  
 
 # Usage Tips  
 .  DO NOT USE QUOTES in path names, for example use `file name` instead of `"file name"` when changing directories with `cd`  
@@ -47,6 +46,10 @@
 .  While using the CNC shell your prompt will be like this: `[ CNC ] >>>` and it can run local system commands.  
 .  To get a list of all available commands in CNC or backdoor prompt simply type `help`.  
 .  ANY COMMAND not included in the help banners will be executed as system shell commands so be carefull with that.  
+
+# Demo  
+#### a demo of pyback installtion and usage on a linux host.( for windows you should probably compile the backdoor to exe)  
+### [Demo](https://github.com/7h3w4lk3r/pyback/blob/master/demo.mkv)  
 
 # To Do    
 .  Add more post-exploitation modules  
