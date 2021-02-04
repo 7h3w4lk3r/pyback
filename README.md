@@ -21,6 +21,7 @@
 
 
 # Installation  
+a demo of pyback installtion and usage on a linux host is included in the files.  
 #### Note: the backdoor should be compiled in a system with the same OS and architecture as the target. DO NOT use wine for windows binary compilation, it wont work.  
 
 ### requirements:  
@@ -47,9 +48,6 @@
 .  To get a list of all available commands in CNC or backdoor prompt simply type `help`.  
 .  ANY COMMAND not included in the help banners will be executed as system shell commands so be carefull with that.  
 
-# Demo  
-#### a demo of pyback installtion and usage on a linux host.( for windows you should probably compile the backdoor to exe)  
-### [Demo](https://github.com/7h3w4lk3r/pyback/blob/master/demo.mkv)  
 
 # To Do    
 .  Add more post-exploitation modules  
