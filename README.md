@@ -48,8 +48,7 @@
 .  To get a list of all available commands in CNC or backdoor prompt simply type `help`.  
 .  ANY COMMAND not included in the help banners will be executed as system shell commands so be carefull with that.  
 
-# To Do  
-.  Migrate to python3 (pain in the ass)  
+# To Do    
 .  Add more post-exploitation modules  
 .  Add a low-level port scanner  
 
