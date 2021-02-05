@@ -33,3 +33,13 @@ All notable changes to this project will be documented in this file.
 
 ### Removed  
 - backdoor password protection removed to prevent interfering with `cast` commands  
+
+## Version 2.1  
+### Changes  
+- major changes in the configuration script  
+- bug fixes in cnc session handling functionality  
+- minor code refactor  
+
+### Added  
+- integrated pyinstaller 3.6 and pyarmor for automatic obfuscation and packing  
+

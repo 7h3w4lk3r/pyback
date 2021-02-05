@@ -67,8 +67,9 @@ try:
         subprocess.call("pip install -r requirements\\windows_requirements.txt", shell=True)
     print green,"""\n\n
                             [+] Installation completed successfully [+] 
-                       run config.py to generate new settings or run the CNC\n\n"""
+                       run config.py to generate new settings or run the CNC\n\n""",r
 except KeyboardInterrupt:
     exit(0)
 except:
     print error_banner
+
