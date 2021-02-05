@@ -3,6 +3,7 @@
 
 
 # Top Features  
+.  Automated obfuscation and packing with pyarmor and pyinstaller  
 .  Cross-platform modules (of course)  
 .  Direct shell access ( no need to type extra garbage )  
 .  AES encrypted communication  
@@ -21,9 +22,7 @@
 
 
 # Installation  
-a demo of pyback installtion and usage on a linux host is included in the files.  
 #### Note: the backdoor should be compiled in a system with the same OS and architecture as the target. DO NOT use wine for windows binary compilation, it wont work.  
-
 ### requirements:  
 #### python 2 ,version 2.7.15 or later  
 #### VCforPython for windows targets, download from  <a href="https://www.microsoft.com/en-us/download/details.aspx?id=44266"> here </a>  
@@ -31,11 +30,9 @@ a demo of pyback installtion and usage on a linux host is included in the files.
 `./setup.py`  
 
 # Usage  
-#### run the config.py script or edit the lib/setting.py manually.  
+#### run the config.py script and follow the steps, you can choose to pack and obfuscate the backdoor automatically during the config operation.  
 `./config.py`  
-
-#### compile the backdoor however you want. i use pyinstaller.  
-` pyinstaller --onefile --noconsole backdoor.py`  
+#### the config script will use pyarmor for obfuscating all the scripts and then pyinstaller version 3.6 for packing the backdoor executable. ( these are both installed with the setup.py script )  
 
 #### send the backdoor, start the c2 and wait for connections.  
 `./cnc.py`  
