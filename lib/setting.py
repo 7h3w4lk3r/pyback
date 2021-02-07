@@ -21,19 +21,19 @@ global ip, port, TMP, APPDATA, path, os_type, access_password, password
 
 # detect OS type ###############
 if "Linux" in platform.uname():
-    os_type = "linux"
+	os_type = "linux"
 else:
-    os_type = "windows"
+	os_type = "windows"
 
 # set windows temp and appdata directory ######
 if os_type == "windows":
-    try:
-        TMP = os.environ["TEMP"]
-        APPDATA = os.environ["APPDATA"]
-    except:
-        pass
+	try:
+		TMP = os.environ["TEMP"]
+		APPDATA = os.environ["APPDATA"]
+	except:
+		pass
 else:
-    TMP = "/tmp"
+	TMP = "/tmp"
 
 # connection/access settings ##############
 dns = '0.0.0.0'

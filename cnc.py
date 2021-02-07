@@ -80,6 +80,7 @@ class listener:
                                 print red,"\n[!] Session is not responding, this ID will be removed [!]\n",r
                                 print "\033[1;32;33m\n[+]\x1b[0m Session ID ", str(num), " removed \033[1;32;33m[+]\x1b[0m\n"
                             else:
+                                print e
                                 print "\n\033[1;32;31m [!]\x1b[0m Invalid session ID\033[1;32;31m [!]\n\x1b[0m"
 
 
@@ -330,7 +331,7 @@ class listener:
                 print red, "\n[!] usage: spawn [target ip] [target port] [!]", r
                 cmd = " "
 
-            elif cmd[0] == "powershell" and cmd[1] == "-h":
+            elif cmd[0] == "powershell" and cmd[1] == "-h" or cmd[0] == "powershell" and not cmd[1]:
                 print red, "\n[!] usage: powershell [command] OR [script] [!]", r
                 cmd = " "
 
