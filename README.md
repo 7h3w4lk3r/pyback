@@ -62,12 +62,11 @@
 
 
 # POC  
-### we all know that no tool like this will stay as FUD as it is, specially when it gets more attention (hopefully). so do me (and yourself) a favor and make it stay under the radar a little bit longer.  
-:heavy_exclamation_mark: DO NOT upload this on VirusTotal or anywhere else, I DID IT FOR YOU :heavy_exclamation_mark:  
+### :heavy_exclamation_mark: DO NOT upload this on VirusTotal or anywhere else, I DID IT FOR YOU :heavy_exclamation_mark:  
 
-### using pyinstaller version 3.1.1:  
+### Updated in 09 Feb 2021:  
 
-![Image description](https://github.com/7h3w4lk3r/pyback/blob/master/image.png) 
+![Image description](https://github.com/7h3w4lk3r/pyback/blob/master/poc.png) 
 
 # Contact  
 Email: bl4ckr4z3r@gmail.com  
