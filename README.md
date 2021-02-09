@@ -22,20 +22,26 @@
 
 
 # Installation  
-#### Note: the backdoor should be compiled in a system with the same OS and architecture as the target. DO NOT use wine for windows binary compilation, it wont work.  
+#### you cna use both python native installation or wine  
 ### requirements:  
 #### python 2 ,version 2.7.15 or later  
-#### VCforPython for windows targets, download from  <a href="https://www.microsoft.com/en-us/download/details.aspx?id=44266"> here </a>  
+
 #### to install pyback simply run the setup.py   
-`./setup.py`  
+`python setup.py`  
+#### or use wine:  
+`wine /root/.wine/drive_c/Python27/python.exe setup.py`  
 
 # Usage  
-#### run the config.py script and follow the steps, you can choose to pack and obfuscate the backdoor automatically during the config operation.  
-`./config.py`  
-#### the config script will use pyarmor for obfuscating all the scripts and then pyinstaller version 3.6 for packing the backdoor executable. ( these are both installed with the setup.py script )  
+#### run the generator script and follow the steps, you can choose to pack and obfuscate the backdoor automatically during the config operation.  
+`python generate.py`  
+#### using wine:  
+`wine /root/.wine/drive_c/Python27/python.exe generate.py`  
+
+#### the config script will use pyarmor for obfuscating all the scripts and then pyinstaller for packing the backdoor executable. ( these are both installed with the setup.py script )  
+#### the generated backdoor will be saved in the `dist` directory inside pyback folder.  
 
 #### send the backdoor, start the c2 and wait for connections.  
-`./cnc.py`  
+`python cnc.py`  
 
 # Usage Tips  
 .  DO NOT USE QUOTES in path names, for example use `file name` instead of `"file name"` when changing directories with `cd`  
