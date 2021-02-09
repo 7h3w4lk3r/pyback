@@ -22,7 +22,7 @@
 
 
 # Installation  
-#### you cna use both python native installation or wine  
+#### you can use python native installation or wine  
 ### requirements:  
 #### python 2 ,version 2.7.15 or later  
 
