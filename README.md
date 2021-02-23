@@ -1,4 +1,4 @@
-# PYBACK 2.1  
+# PYBACK 2.1.0  
 #### FUD (if you keep it that way) cross-platform backdoor and CNC written in python 2 with post exploitation modules and encrypted communication.  
 
 
