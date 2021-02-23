@@ -1,7 +1,7 @@
 # Changelog  
 All notable changes to this project will be documented in this file.  
 
-## Version 1.0  
+## Version 1.0.0  
 - single file source code ( both backdoor and listener )  
 - direct shell access  
 - get target system information  
@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file.
 - client/server connection wait  
 - dump windows hashes using ntds and reg save methods  
 
-## Version 2.0  
+## Version 2.0.0  
 ### Changes  
 - completely refactored code base and modular structure  
 - improved sysinfo function  
@@ -34,7 +34,7 @@ All notable changes to this project will be documented in this file.
 ### Removed  
 - backdoor password protection removed to prevent interfering with `cast` commands  
 
-## Version 2.1  
+## Version 2.1.0  
 ### Changes  
 - major changes in the configuration script  
 - bug fixes in cnc session handling functionality  
