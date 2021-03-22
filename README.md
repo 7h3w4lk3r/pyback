@@ -52,11 +52,6 @@
 .  ANY COMMAND not included in the help banners will be executed as system shell commands so be carefull with that.  
 
 
-# To Do    
-.  Add more post-exploitation modules  
-.  Add a low-level port scanner  
-
-
 # Changelog  
 #### see changelogs for different versions [here](https://github.com/7h3w4lk3r/pyback/blob/master/CHANGELOGS.md)    
 
