@@ -1,4 +1,4 @@
-from setting import *
+from lib.setting import *
 
 
 # AES encryption/decryption class #################################################

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from setting import *
+from lib.setting import *
 
 log = ""
 

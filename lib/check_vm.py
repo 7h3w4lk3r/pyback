@@ -1,4 +1,4 @@
-from setting import *
+from lib.setting import *
 
 def detectVM():
     if os_type == "windows":
@@ -19,5 +19,5 @@ def detectVM():
                 return "\n\033[1;32;31m[!]\x1b[0m Virtual Machine detected 033[1;32;31m[!]\n\x1b[0m"
         except subprocess.CalledProcessError:
             return "\n\033[1;32;32m[+]\x1b[0m doesn't appear to be a VM \033[1;32;32m[+]\n\x1b[0m"
-        except Exception, e:
+        except Exception as e:
             return "\n\033[1;32;31m[-]\x1b[0m VM check failed, unable to grep /proc/cpuinfo " + str(e) + "\033[1;32;31m[-]\n\x1b[0m"

@@ -1,4 +1,4 @@
-from setting import *
+from lib.setting import *
 
 # set firewall rules ###############################################################################
 def firewall(direction, port, name):

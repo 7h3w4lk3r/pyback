@@ -1,4 +1,4 @@
-from setting import *
+from lib.setting import *
 from time import *
 
 def sysinfo():

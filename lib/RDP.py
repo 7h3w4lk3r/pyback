@@ -1,4 +1,4 @@
-from setting import *
+from lib.setting import *
 
 def rdp(switch):
     if os_type == "windows":

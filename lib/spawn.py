@@ -1,4 +1,4 @@
-from setting import *
+from lib.setting import *
 
 
 # spawn powershell session ####################################################################################
