@@ -2,7 +2,7 @@
 #### FUD (if you keep it that way) cross-platform backdoor and CNC written in python 2 with post exploitation modules and encrypted communication.  
 
 
-# Top Features  
+# Features  
 .  Automated obfuscation and packing with pyarmor and pyinstaller  
 .  Cross-platform modules (of course)  
 .  Direct shell access ( no need to type extra garbage )  
@@ -59,7 +59,7 @@
 # POC  
 ### :heavy_exclamation_mark: DO NOT upload this on VirusTotal or anywhere else, I DID IT FOR YOU :heavy_exclamation_mark:  
 
-### Updated in 09 Feb 2021:  
+### Updated in 23 Apr 2021:  
 
 ![Image description](https://github.com/7h3w4lk3r/pyback/blob/master/poc.png) 
 

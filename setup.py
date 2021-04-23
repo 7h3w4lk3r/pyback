@@ -46,9 +46,8 @@ error_banner = red,"""
 please make sure:
 
 1. python 2 is installed correctly
-2. VCforPython is installed for Windows systems
-3. you have a working network connection for pip
-4. there are no mismatches in python packages
+2. you have a working network connection for pip
+3. there are no mismatches in python packages
 
 """,r
 
