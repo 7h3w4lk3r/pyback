@@ -1,5 +1,5 @@
 # PYBACK 2.1.0  
-#### FUD (if you keep it that way) cross-platform backdoor and CNC written in python 2 with post exploitation modules and encrypted communication.  
+#### Object-oriented FUD (if you keep it that way) cross-platform backdoor and CNC written in python 2 with post exploitation modules and encrypted communication.  
 
 
 # Features  
@@ -37,8 +37,7 @@
 #### using wine:  
 `wine /root/.wine/drive_c/Python27/python.exe generate.py`  
 
-#### the backdoor generator will use pyarmor for obfuscating all the scripts and then pyinstaller for packing the backdoor executable. ( these are both installed with the setup.py script )  
-#### the generated backdoor will be saved in the `dist` directory inside pyback folder.  
+#### the generated backdoor will be saved in the `output` directory inside pyback folder.  
 
 #### send the backdoor, start the c2 and wait for connections.  
 `python cnc.py`  
