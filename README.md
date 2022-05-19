@@ -18,7 +18,7 @@
 .  Enable/disable RDP  
 .  Enable/disable UAC  
 .  Easy session interaction and handling  
-.  Windows persistence using registry entries ( more methods will be added )  
+.  Windows persistence using registry entries   
 
 
 # Installation  
